@@ -53,7 +53,9 @@ Coarsegold：主角佛萊迪·法卡斯年輕時是鎮上最快的槍手，某�
 
 ## 安裝
 
-1. 取得對應平台的壓縮檔並解開（Releases 發佈後可直接下載；也可以照下一節自己重建）。
+1. 從 [Releases](https://github.com/wicanr2/freddy_pharkas_frontiner_pharmacist_cht/releases/latest)
+   下載對應平台的檔案並解開（Linux 是 `.AppImage`、Windows 是 `.zip`、macOS 是
+   `.dmg` 或掛不起來時用 `.tar.gz`）；也可以照下一節自己重建。
 2. 包裡的 `scummvm-cht/` 資料夾裝著 `translation.tsv`、`freddy_big5.fnt`、
    `freddy_big5_hi.fnt`。啟動腳本會用 `extrapath` 指過去，不必手動搬；
    要自己下指令的話，把這個資料夾當 `--extrapath` 就行。
