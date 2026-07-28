@@ -28,6 +28,12 @@
 !dist-cht/
 !dist-cht/**
 
+# CI(macOS universal .app 只能在 macOS host build,借 GitHub Actions)
+# 注意:拒絕優先的 .gitignore 會連 .github/ 一起吃掉,漏了這兩行 workflow 根本
+# 推不上去,gh workflow run 只會回 404 workflow not found。
+!.github/
+!.github/**
+
 # 中文文件與 README 圖
 !docs/
 !docs/**
