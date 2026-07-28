@@ -7,8 +7,9 @@
 # 用法:freddy_package_appimage.sh patch|full
 #
 # 為什麼啟動器要自己寫 config 而不是用 --auto-detect / --language=tw:
-#   本專案的 CD 版遊戲檔案 md5 跟 scummvm 內建 detection_tables.h 的「Freddy Pharkas CD」
-#   指紋對不上(同尺寸、不同 md5,盤面壓製批次差異),--auto-detect 會抓不到 target。
+#   SCI 的中文開關讀的是 **target 設定** 裡的 language=tw,不吃命令列的 --language。
+#   直接寫一份帶 engineid/gameid/language=tw 的 ini 再指定 target,是最不會出錯的做法
+#   (實測 ScummVM 認得這份 CD 版、偵測本身沒問題,寫 ini 只是省掉偵測與設定這兩步)。
 #   跟 cap.sh/cap_rooms.sh 驗證過的做法一致:直接寫一份帶 engineid=sci、gameid=freddypharkas、
 #   language=tw 的 scummvm.ini,再指定 target 啟動,繞過完整偵測。
 #

@@ -7,8 +7,8 @@
 # 用法:freddy_package_windows.sh patch|full
 # 前置:先跑 mingw configure+make 產出 scummvm-win/scummvm.exe
 #
-# .bat 自己寫 scummvm.ini 再指定 target,理由同 AppImage:本專案 CD 版遊戲檔案 md5
-# 跟內建 detection_tables.h 指紋對不上,--auto-detect/--language=tw 這種命令列參數
+# .bat 自己寫 scummvm.ini 再指定 target,理由同 AppImage:中文要靠 target 設定的
+# language=tw 啟用,--language=tw 這種命令列參數
 # 在偵測階段就會抓不到 target,只能直接寫 config 指定 engineid=sci + gameid=freddypharkas。
 #
 # [HARD] MT-32 ROM 有版權:**patch 版一律不放**(要上公開 Release)。
@@ -123,9 +123,8 @@ cat > "$STAGE/讀我.txt" <<'TXT'
   完整版：直接雙擊「玩-多情藥師酷牛仔-繁中.bat」，遊戲已內嵌在 game\ 裡。
 
 .bat 會自動產生一份 scummvm.ini 並指定中文 target。
-不要改用 --auto-detect 或 --language=tw 這種命令列參數：本專案的 CD 版遊戲檔案
-跟 ScummVM 內建的偵測指紋對不上（同尺寸、不同壓製批次的 md5），偵測階段就會抓不到，
-必須直接指定 engineid=sci + gameid=freddypharkas。
+中文開關讀的是 target 設定裡的 language=tw，不吃命令列的 --language=tw，
+所以 .bat 直接寫好 ini 再指定 target，省掉手動加遊戲與改設定這兩步。
 
 MT-32 音效
 ------
