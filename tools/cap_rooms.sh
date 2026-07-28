@@ -47,8 +47,14 @@ for R in $ROOMS; do
   xdotool key ctrl+alt+d; sleep 1
   xdotool key Escape; sleep 6
   shot $OUT/r\${R}_0
-  for xy in '760 420' '900 500' '1020 560' '620 480'; do
-    xdotool mousemove \$xy click 1; sleep 4
+  # 用「看」游標掃過整個場景的格點,盡量踩到熱點逼出敘述框(亂點同一處只會反覆觸發同一句)
+  n=0
+  for y in 360 430 500 570 640; do
+    for x in 560 700 840 980 1090; do
+      xdotool mousemove \$x \$y click 1; sleep 2
+      n=\$((n+1))
+      [ \$((n % 8)) -eq 0 ] && shot $OUT/r\${R}_g\$n
+    done
   done
   shot $OUT/r\${R}_1
   xdotool mousemove 800 700 click 1; sleep 2

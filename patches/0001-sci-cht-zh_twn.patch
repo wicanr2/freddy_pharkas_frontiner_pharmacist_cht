@@ -161,7 +161,7 @@ index fda7797e..b012b331 100644
  			_cachedFonts[fontId] = new GfxFontFromResource(_resMan, _screen, fontId);
  	}
 diff --git a/engines/sci/graphics/paint16.cpp b/engines/sci/graphics/paint16.cpp
-index 2e901e8d..6aa5b7dd 100644
+index 2e901e8d..a4a93de1 100644
 --- a/engines/sci/graphics/paint16.cpp
 +++ b/engines/sci/graphics/paint16.cpp
 @@ -19,6 +19,8 @@
@@ -728,7 +728,7 @@ index 94d96a6e..b4c689eb 100644
  	graphics/fontsjis.o \
  	graphics/macfont.o \
 diff --git a/engines/sci/sci.cpp b/engines/sci/sci.cpp
-index b4d28b79..b18bc79b 100644
+index b4d28b79..4d554a71 100644
 --- a/engines/sci/sci.cpp
 +++ b/engines/sci/sci.cpp
 @@ -19,6 +19,9 @@
@@ -804,7 +804,7 @@ index b4d28b79..b18bc79b 100644
  #ifdef ENABLE_SCI32
  	if (getSciVersion() >= SCI_VERSION_2) {
  		// SCI32 graphic objects creation
-@@ -831,7 +876,95 @@ const char *SciEngine::getGameIdStr() const {
+@@ -831,7 +876,202 @@ const char *SciEngine::getGameIdStr() const {
  	return _gameDescription->gameId;
  }
  
@@ -832,11 +832,118 @@ index b4d28b79..b18bc79b 100644
 +	return out;
 +}
 +
++// CHT: split a string into sentences. A sentence ends at a run of '.'/'!'/'?' that is
++// followed by whitespace or end-of-string; the trailing whitespace is dropped. Chinese
++// full-width '。'/'！'/'？' (Big5 A1 43 / A1 49 / A1 48) end a sentence too -- their lead
++// byte is A1, so we test the two-byte pair rather than a single char.
++static void sciChtSplitSentences(const Common::String &s, Common::Array<Common::String> &out) {
++	uint start = 0;
++	for (uint i = 0; i < s.size(); ) {
++		const byte c = (byte)s[i];
++		bool isEnd = false;
++		uint next = i + 1;
++		if (c == '.' || c == '!' || c == '?') {
++			while (next < s.size() && (s[next] == '.' || s[next] == '!' || s[next] == '?' ||
++			                           s[next] == '"' || s[next] == '\''))
++				++next;
++			isEnd = (next >= s.size() || s[next] == ' ' || s[next] == '\r' || s[next] == '\n');
++		} else if (c == 0xA1 && i + 1 < s.size()) {
++			const byte c2 = (byte)s[i + 1];
++			if (c2 == 0x43 || c2 == 0x48 || c2 == 0x49) { // 。 ？ ！
++				next = i + 2;
++				while (next + 1 < s.size() && (byte)s[next] == 0xA1 &&
++				       ((byte)s[next + 1] == 0x43 || (byte)s[next + 1] == 0x48 || (byte)s[next + 1] == 0x49))
++					next += 2;
++				isEnd = true;
++			} else {
++				next = i + 2; // some other Big5 symbol -- skip both bytes
++			}
++		} else if (c >= 0x81 && c <= 0xFE && i + 1 < s.size()) {
++			next = i + 2; // Big5 double byte: never mistake its trail byte for punctuation
++		}
++		if (isEnd) {
++			out.push_back(Common::String(s.c_str() + start, next - start));
++			while (next < s.size() && (s[next] == ' ' || s[next] == '\r' || s[next] == '\n'))
++				++next;
++			start = next;
++		}
++		i = next;
++	}
++	if (start < s.size())
++		out.push_back(Common::String(s.c_str() + start, s.size() - start));
++}
++
++// CHT: the game's Narrator/Talker scripts break a long message into several windows,
++// cutting at sentence boundaries, and draw each piece separately. A whole-string lookup
++// therefore misses on every piece. Fall back to sentence alignment: find a table entry
++// whose English text contains `query` as a whole run of consecutive sentences, and return
++// the matching run of Chinese sentences. Only entries whose English and Chinese sentence
++// counts agree are usable -- otherwise the runs don't correspond and we'd return the wrong
++// text, so we decline and let the English through.
++const char *SciEngine::chtChunkFallback(const Common::String &query) const {
++	if (query.size() < 12)
++		return nullptr;
++	Common::HashMap<Common::String, Common::String>::const_iterator cached = _chtChunkCache.find(query);
++	if (cached != _chtChunkCache.end())
++		return cached->_value.empty() ? nullptr : cached->_value.c_str();
++
++	Common::String result;
++	for (Common::HashMap<Common::String, Common::String>::const_iterator it = _chtTranslation.begin();
++	     it != _chtTranslation.end(); ++it) {
++		const Common::String &en = it->_key;
++		if (en.size() <= query.size())
++			continue;
++		const char *at = strstr(en.c_str(), query.c_str());
++		if (!at)
++			continue;
++		const uint pos = (uint)(at - en.c_str());
++		// must start a sentence and end one
++		if (pos != 0 && en[pos - 1] != ' ')
++			continue;
++
++		Common::Array<Common::String> enParts, zhParts;
++		sciChtSplitSentences(en, enParts);
++		sciChtSplitSentences(it->_value, zhParts);
++		if (enParts.size() != zhParts.size() || enParts.size() < 2)
++			continue;
++
++		// locate the run of English sentences that reconstructs `query`
++		uint first = 0, consumed = 0;
++		bool found = false;
++		for (uint i = 0; i < enParts.size(); ++i) {
++			if (consumed == pos) { first = i; found = true; break; }
++			consumed += enParts[i].size() + 1; // + the separating space
++		}
++		if (!found)
++			continue;
++		Common::String joinedEn, joinedZh;
++		for (uint i = first; i < enParts.size(); ++i) {
++			if (i > first) { joinedEn += ' '; joinedZh += ' '; }
++			joinedEn += enParts[i];
++			joinedZh += zhParts[i];
++			if (joinedEn == query) { result = joinedZh; break; }
++			if (joinedEn.size() > query.size())
++				break;
++		}
++		if (!result.empty())
++			break;
++	}
++	_chtChunkCache[query] = result;   // negative results cached too -- one scan per string
++	return result.empty() ? nullptr : _chtChunkCache[query].c_str();
++}
++
 +const char *SciEngine::getChtTranslation(const char *original) const {
 +	if (_chtTranslation.empty() || !_chtLangOn || !original)   // F8 切到英文時 _chtLangOn=false → 回 nullptr 露原文
 +		return nullptr;
-+	Common::HashMap<Common::String, Common::String>::const_iterator it = _chtTranslation.find(sciChtNormKey(original));
++	const Common::String key = sciChtNormKey(original);
++	Common::HashMap<Common::String, Common::String>::const_iterator it = _chtTranslation.find(key);
 +	if (it == _chtTranslation.end()) {
++		const char *chunk = chtChunkFallback(key);
++		if (chunk) {
++			if (getenv("SCI_CHT_DEBUG"))
++				warning("CHT-CHUNK[%d]:%s", (int)strlen(original), original);
++			return chunk;
++		}
 +		if (getenv("SCI_CHT_DEBUG"))
 +			warning("CHT-MISS[%d]:%s", (int)strlen(original), original);
 +		return nullptr;
@@ -901,7 +1008,7 @@ index b4d28b79..b18bc79b 100644
  }
  
 diff --git a/engines/sci/sci.h b/engines/sci/sci.h
-index d9361700..ced803d9 100644
+index d9361700..a503f38f 100644
 --- a/engines/sci/sci.h
 +++ b/engines/sci/sci.h
 @@ -26,6 +26,8 @@
@@ -913,7 +1020,7 @@ index d9361700..ced803d9 100644
  #include "sci/engine/vm_types.h"	// for Selector
  #include "sci/debug.h"	// for DebugState
  #include "sci/detection.h" // Shared code between detection and engine
-@@ -185,6 +187,17 @@ public:
+@@ -185,6 +187,18 @@ public:
  	const char *getGameIdStr() const;
  	Common::Language getLanguage() const;
  
@@ -924,6 +1031,7 @@ index d9361700..ced803d9 100644
 +	 * translation.tsv rather than patched SCI resources.
 +	 */
 +	const char *getChtTranslation(const char *original) const;
++	const char *chtChunkFallback(const Common::String &query) const; /**< CHT: 長訊息被腳本切段顯示時的句段對齊回退 */
 +	void loadChtTranslation();
 +	bool chtLangOn() const { return _chtLangOn; } /**< CHT: F8 中/英切換目前是否顯示中文 */
 +	void toggleChtLang() { _chtLangOn = !_chtLangOn; }
@@ -931,11 +1039,12 @@ index d9361700..ced803d9 100644
  	/**
  	 * Returns true if the game's language direction is Right To Left.
  	 * RTL support did not exist in the original SCI engine.
-@@ -406,6 +419,8 @@ private:
+@@ -406,6 +420,9 @@ private:
  
  	const ADGameDescription *_gameDescription;
  	const SciGameId _gameId;
 +	Common::HashMap<Common::String, Common::String> _chtTranslation; /**< CHT: English -> Big5 */
++	mutable Common::HashMap<Common::String, Common::String> _chtChunkCache; /**< CHT: 句段回退結果快取(含查無的負結果),每個字串只掃一次譯表 */
 +	bool _chtLangOn = true; /**< CHT: F8 中/英切換旗標，false 時 getChtTranslation 回 nullptr → 露原文 */
  	ResourceManager *_resMan; /**< The resource manager */
  	ScriptPatcher *_scriptPatcher; /**< The script patcher */
