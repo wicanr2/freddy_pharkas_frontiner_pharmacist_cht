@@ -132,7 +132,8 @@ echo ">> appimagetool 打包(--appimage-extract-and-run 免 FUSE)"
 docker run --rm --name freddy-pkg-appimagetool -v "$STAGE:/stage" -v "$ROOT/tools/.cache:/cache:ro" \
   -e ARCH=x86_64 -w /stage "$BUILD_IMG" bash -c \
   "apt-get update -qq >/dev/null && apt-get install -y -qq file >/dev/null && \
-   /cache/appimagetool-x86_64.AppImage --appimage-extract-and-run 'AppDir' '/stage/$(basename "$OUT")'"
+   /cache/appimagetool-x86_64.AppImage --appimage-extract-and-run 'AppDir' '/stage/$(basename "$OUT")' && \
+   chown $(id -u):$(id -g) '/stage/$(basename "$OUT")'"
 mv "$STAGE/$(basename "$OUT")" "$OUT"
 chmod +x "$OUT"
 echo ">> 完成: $OUT ($(du -h "$OUT" | cut -f1))"
