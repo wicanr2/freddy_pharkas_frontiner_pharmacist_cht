@@ -54,12 +54,18 @@ Coarsegold：主角佛萊迪·法卡斯年輕時是鎮上最快的槍手，某�
 ## 安裝
 
 1. 取得對應平台的壓縮檔並解開（Releases 發佈後可直接下載；也可以照下一節自己重建）。
-2. 把 `cht-data/` 裡的 `translation.tsv`、`freddy_big5.fnt`、`freddy_big5_hi.fnt`
-   複製到遊戲資料夾（或用啟動器附的 `--extrapath` 參數指過去）。
-3. 用附的啟動腳本執行，或自行指定：
+2. 包裡的 `scummvm-cht/` 資料夾裝著 `translation.tsv`、`freddy_big5.fnt`、
+   `freddy_big5_hi.fnt`。啟動腳本會用 `extrapath` 指過去，不必手動搬；
+   要自己下指令的話，把這個資料夾當 `--extrapath` 就行。
+3. Windows 版把遊戲資料夾拖到 `玩-多情藥師酷牛仔-繁中.bat` 上即可；
+   Linux 版執行 `AppRun`／AppImage 並把遊戲資料夾當第一個參數。自行指定則是：
 
-   ```
-   scummvm --path=<你的遊戲資料夾> --extrapath=<cht-data 資料夾> freddypharkas
+   ```bash
+   # Linux（AppImage，遊戲資料夾當第一個參數）
+   ./FreddyPharkas-CHT-patch-x86_64.AppImage ~/games/freddy
+
+   # 或用自己的 ScummVM
+   scummvm --path=<你的遊戲資料夾> --extrapath=<scummvm-cht 資料夾> freddypharkas
    ```
 
 4. **中文要靠 target 設定啟用，不是命令列參數**。在 ScummVM 的遊戲設定裡把語言設成
@@ -70,7 +76,7 @@ Coarsegold：主角佛萊迪·法卡斯年輕時是鎮上最快的槍手，某�
    engineid=sci
    gameid=freddypharkas
    path=<你的遊戲資料夾>
-   extrapath=<cht-data 資料夾>
+   extrapath=<scummvm-cht 資料夾>
    language=tw
    subtitles=true
    ```
