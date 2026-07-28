@@ -11,7 +11,9 @@
 # 跟內建 detection_tables.h 指紋對不上,--auto-detect/--language=tw 這種命令列參數
 # 在偵測階段就會抓不到 target,只能直接寫 config 指定 engineid=sci + gameid=freddypharkas。
 #
-# [HARD] MT-32 ROM 有版權,不放進任何包(patch 或 full 都不放)。
+# [HARD] MT-32 ROM 有版權:**patch 版一律不放**(要上公開 Release)。
+# full 版只留在本機 dist-all/(gitignore、不散布),依專案規則可附 ROM,
+# 沒有 ROM 時 stage_mt32_rom() 會自己略過並退回預設音效驅動。
 set -euo pipefail
 MODE="${1:?用法: freddy_package_windows.sh patch|full}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -45,6 +47,10 @@ else
   echo ">> 放入遊戲資料(game/ 已含中文資料)"
   mkdir -p "$STAGE/game"
   cp -r "$ROOT/game/." "$STAGE/game/"
+  # shellcheck source=/dev/null
+  . "$ROOT/tools/pkg_common.sh"
+  MT32_OK=0
+  stage_mt32_rom "$STAGE/game" && MT32_OK=1
 fi
 
 # --- 啟動器 .bat(CRLF 換行,逐行 append 寫 ini——區塊重導向在部分 cmd 實作/wine 不生效)-----
@@ -99,6 +105,12 @@ set "INI=%~dp0scummvm.ini"
 >>"%INI%"  echo speech_mute=false
 "%~dp0scummvm.exe" --config="%~dp0scummvm.ini" freddypharkas %*
 BAT
+  # 有 ROM 才把 MT-32 設成預設驅動;沒 ROM 卻設 mt32,ScummVM 會先彈一次
+  # 「MT-32 emulator cannot be used」擋住玩家再回退 AdLib。
+  if [ "${MT32_OK:-0}" = 1 ]; then
+    sed -i 's|^>>"%INI%"  echo speech_mute=false|>>"%INI%"  echo speech_mute=false\n>>"%INI%"  echo music_driver=mt32|' \
+      "$STAGE/玩-多情藥師酷牛仔-繁中.bat"
+  fi
 fi
 sed -i 's/$/\r/' "$STAGE/玩-多情藥師酷牛仔-繁中.bat"
 

@@ -12,7 +12,9 @@
 #   跟 cap.sh/cap_rooms.sh 驗證過的做法一致:直接寫一份帶 engineid=sci、gameid=freddypharkas、
 #   language=tw 的 scummvm.ini,再指定 target 啟動,繞過完整偵測。
 #
-# [HARD] MT-32 ROM 有版權,不放進任何包(patch 或 full 都不放)。
+# [HARD] MT-32 ROM 有版權:**patch 版一律不放**(要上公開 Release)。
+# full 版只留在本機 dist-all/(gitignore、不散布),依專案規則可附 ROM,
+# 沒有 ROM 時 stage_mt32_rom() 會自己略過並退回預設音效驅動。
 set -euo pipefail
 MODE="${1:?用法: freddy_package_appimage.sh patch|full}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -50,8 +52,12 @@ if [ "$MODE" = patch ]; then
      "$ROOT/dist-cht/freddy_big5_hi.fnt" "$APPDIR/usr/share/scummvm-cht/"
 else
   echo ">> 放入遊戲資料(game/ 已含中文資料)"
+  # shellcheck source=/dev/null
+  . "$ROOT/tools/pkg_common.sh"
   mkdir -p "$APPDIR/usr/share/game"
   cp -r "$ROOT/game/." "$APPDIR/usr/share/game/"
+  MT32_OK=0
+  stage_mt32_rom "$APPDIR/usr/share/game" && MT32_OK=1
 fi
 
 cp "$ROOT/tools/assets/freddy-cht.png" "$APPDIR/freddy-cht.png"
@@ -124,6 +130,11 @@ speech_mute=false
 CFGEOF
 exec "$HERE/usr/bin/scummvm" --config="$CFG" freddypharkas "$@"
 APPRUN
+  # 有 ROM 才設 MT-32 為預設驅動:沒 ROM 卻設 mt32,ScummVM 會先彈一次
+  # 「MT-32 emulator cannot be used」擋住玩家再回退 AdLib。
+  if [ "${MT32_OK:-0}" = 1 ]; then
+    sed -i 's|^speech_mute=false$|speech_mute=false\nmusic_driver=mt32|' "$APPDIR/AppRun"
+  fi
 fi
 chmod +x "$APPDIR/AppRun"
 
