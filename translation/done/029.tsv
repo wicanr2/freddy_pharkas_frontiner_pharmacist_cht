@@ -10,7 +10,7 @@ SAVE GAME	存檔
 That game was saved under a different interpreter. It cannot be restored.	這個存檔是用不同的直譯器儲存的，無法讀取。
 [control $%x]	[control $%x]
 Error in (%s check:) totAngle [%d] != +-360	(%s 檢查) 發生錯誤：totAngle [%d] ！= +-360
-DRAGGING: %d, %d	拖曳中：%d， %d
+DRAGGING: %d, %d	拖曳中：%d, %d
 %d.pol	%d.pol
 The file '%s' already exists	檔案「%s」已經存在
 Error opening '%s'	開啟「%s」時發生錯誤

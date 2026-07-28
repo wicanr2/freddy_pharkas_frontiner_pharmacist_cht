@@ -40,6 +40,16 @@ NAME_FIXES = [
     # Hop Singh 的西部片諧音全名 Hopalong Singh
     ("霍普龍·辛", "霍帕龍·星"),
     ("霍帕龍·辛", "霍帕龍·星"),
+    # 以下是併完各批之後用譯名稽核挑出來的分歧(同一角色/專名被不同批各譯一種)
+    ("謝夫警長", "席夫特警長"),
+    ("警長謝夫", "席夫特警長"),
+    ("奇肯", "切肯"),          # Sheriff "Chicken" P. Shift 的綽號
+    ("巴蘭斯", "貝倫斯"),      # P. H. Balance
+    ("阿牌", "王牌"),          # Wheaton "Aces" Hall
+    ("重啟山莊", "重開機墓園"),  # ReBoot Hill(Boot Hill + reboot)
+    ("G痔瘡膏", "G藥膏"),      # Preparation G
+    ("普林姆小姐", "潘妮洛普小姐"),
+    ("普林姆", "潘妮洛普"),
 ]
 
 HALF2FULL = {",": "，", "!": "！", "?": "？", ";": "；", ":": "："}
@@ -61,22 +71,34 @@ def load_corrections(path="translation/corrections.tsv"):
     return out
 
 
+FULL2HALF = {v: k for k, v in HALF2FULL.items()}
+
+
+def _iscjk(c):
+    return bool(c) and CJK.match(c) is not None
+
+
 def fix_punct(zh):
-    """半形標點 → 全形。跳過 printf 規格、|cN| 色碼、英文縮寫中的點。"""
+    """半形標點 ↔ 全形,以「左右是不是中文」判斷,兩個方向都修。
+
+    只看「這行有中文」不夠:譯文常同時含中文與整段保留的英文(版權宣告、
+    Sierra 的電話地址、遊戲名縮寫)。早期版本只要整行有中文就把半形逗號全轉全形,
+    把 `Sierra On-Line, Inc.` 弄成 `Sierra On-Line， Inc.`。改成只在標點**緊鄰中文**
+    時才轉全形;反過來,夾在英數之間的全形標點也轉回半形(修掉先前轉壞的)。
+    """
     if not CJK.search(zh):
         return zh
     # 中文內容的半形括號 → 全形(括號裡沒有 % 規格才動)
     zh = PAREN.sub(lambda m: "（" + m.group(1) + "）" if "%" not in m.group(1) else m.group(0), zh)
     out = []
     for i, ch in enumerate(zh):
-        if ch in HALF2FULL:
-            prev = zh[i - 1] if i else ""
-            nxt = zh[i + 1] if i + 1 < len(zh) else ""
-            # 英文/數字之間的標點多半屬於原文保留的片段,不動
-            if prev.isascii() and prev.isalnum() and nxt.isascii() and nxt.isalnum():
-                out.append(ch)
-                continue
+        prev = zh[i - 1] if i else ""
+        nxt = zh[i + 1] if i + 1 < len(zh) else ""
+        if ch in HALF2FULL and (_iscjk(prev) or _iscjk(nxt)):
             out.append(HALF2FULL[ch])
+        elif ch in FULL2HALF and prev.isascii() and prev.isalnum() and \
+                (nxt == " " or (nxt.isascii() and nxt.isalnum())):
+            out.append(FULL2HALF[ch])   # 夾在英文中間的全形標點:轉回半形
         else:
             out.append(ch)
     return "".join(out)
