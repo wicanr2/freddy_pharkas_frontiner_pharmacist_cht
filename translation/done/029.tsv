@@ -1,0 +1,76 @@
+New save-game directory:	新存檔目錄：
+with:	為：
+You must type a description for the game.	你必須輸入這個遊戲的描述。
+Select the game that you would like to restore.	請選擇你要讀取的遊戲。
+Type the description of this saved game.	請輸入這個存檔的描述。
+Your save game disk is full. You must either use another disk or save over an existing saved game.	你的存檔磁碟已滿，你必須換一張磁碟，或是覆寫現有的存檔。
+GAME	遊戲
+Insert the %s disk in drive %s.	請將 %s 磁碟插入 %s 磁碟機。
+SAVE GAME	存檔
+That game was saved under a different interpreter. It cannot be restored.	這個存檔是用不同的直譯器儲存的，無法讀取。
+[control $%x]	[control $%x]
+Error in (%s check:) totAngle [%d] != +-360	(%s 檢查) 發生錯誤：totAngle [%d] ！= +-360
+DRAGGING: %d, %d	拖曳中：%d， %d
+%d.pol	%d.pol
+The file '%s' already exists	檔案「%s」已經存在
+Error opening '%s'	開啟「%s」時發生錯誤
+; %s : Picture %d	； %s：圖片 %d
+%s.mem	%s.mem
+%s.log	%s.log
+Log file "%s" exists	記錄檔「%s」已存在
+QA-COMMENT%d	QA-COMMENT%d
+Comment line %d of %d:	第 %d／%d 行註解：
+%s [Collection of size %d]	%s〔集合，大小 %d〕
+%s [List of size %d]	%s〔清單，大小 %d〕
+%s [Set of size %d]	%s〔集，大小 %d〕
+Door Key	房門鑰匙
+Penelope's Rx	潘妮洛普的處方箋
+Helen's Rx	海倫的處方箋
+Madame's Rx	夫人的處方箋
+Shot Glass	小酒杯
+Under Glass	玻璃罩內物
+Prep G	G藥膏
+Tower H20	水塔水
+Tin Can	鐵罐
+Ice Pick	冰鑿
+Leather Strap	皮帶
+Open Beer	開瓶啤酒
+Empty Bottles	空瓶
+Church Key	開瓶器
+Pure Solution	純溶液
+Nitrous Oxide	一氧化二氮
+Baking Soda	小蘇打粉
+Post Cards	明信片
+Candle Wax	蠟燭油
+Desk Key	書桌鑰匙
+Deposit Key	保管箱鑰匙
+Cleaning Kit	清潔工具組
+Empty Mold	空模具
+Wax Filled Mold	填蠟模具
+Silver Filled Mold	填銀模具
+Wax Ear	蠟耳朵
+Silver Ear	銀耳朵
+Claim Check	領取憑證
+Sharp Ear	尖銳耳朵
+Paper Sack	紙袋
+Filled Sack	裝滿的袋子
+Horse Plop	馬糞
+Outta here!	閃人啦！
+Carrie Sue	凱莉蘇
+Rover, the town dog	阿旺，鎮上的狗
+Trixie, the town sheep	翠西，鎮上的羊
+Duck Gillespie	鴨子吉勒斯比
+Colonel Shanders	山德士上校
+Francis Bacon	法蘭西斯·培根
+See them tumblin' down	看它們滾滾而去
+Preacher's Kid	牧師的孩子
+Ol' Pickaxe Pete	鶴嘴鋤老皮
+Officer Wilke	威爾克警員
+Pony Express Rider	小馬快遞騎士
+Miz Tucker	塔克太太
+Miss Eulalie	尤拉莉小姐
+Bridget and Rocko O'Hanrahan	布莉姬與洛可·歐哈納翰
+Old Man	老翁
+Old Lady	老婦人
+molten silver	熔融銀
+w/ medallion	附勳章

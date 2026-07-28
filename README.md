@@ -1,0 +1,136 @@
+# 多情藥師酷牛仔 — 繁體中文化
+
+![軟體世界當年的中文廣告](images/banner-softworld.jpg)
+
+1993 年，Sierra On-Line 推出了《Freddy Pharkas: Frontier Pharmacist》。編劇是寫過
+《Leisure Suit Larry》的 Al Lowe 與 Josh Mandel，故事發生在加州淘金小鎮 Coarsegold：
+主角佛萊迪·法卡斯年輕時是快槍手，一場意外炸掉一隻耳朵之後金盆洗手，改行當藥劑師。
+整部作品從頭到尾都在玩雙關、諧音與西部片戲仿，旁白尤其嘴賤。
+
+台灣當年由第三波代理，譯名《多情藥師酷牛仔》，《軟體世界》雜誌刊過廣告與 61／62 兩期攻略。
+那個年代它沒有中文版。這個專案把它補上：全遊戲 5,181 則文字全部譯成繁體中文，
+用倚天點陣字直接在 ScummVM 的 SCI 引擎裡繪製，畫布拉到 640×400 讓中文夠大夠清楚。
+
+| | |
+|---|---|
+| ![主選單](images/shot_v1_00_menu.png) | ![遊戲中對白](images/shot_v1_12_round.png) |
+| 主選單與所有按鈕都是中文 | 對白框走 24×24 高解析中文，不是把 16 點字放大的馬賽克 |
+| ![藥局](images/shot_tourA_r600_1.png) | ![老媽餐館](images/shot_probe2_r660_1.png) |
+| 粗金鎮上的藥局，遊戲的主場景 | 老媽餐館 |
+
+## 這個中文化包含什麼
+
+- **5,166 / 5,181 則文字**（99.7%）已翻譯。沒翻的 15 則是 Sierra 留在遊戲裡的開發工具字串
+  （文字編輯器、`Font Number:` 之類）與處方判定用的內部旗標，玩家看不到。
+- 涵蓋範圍不只主線對白：**旁白、道具欄品名、主選單與控制面板、藥品與化學品名、
+  片頭片尾字幕、結局畫面、演職員表** 都在內。演職員表的真人姓名維持拉丁字母。
+- **字型用倚天中文系統 3.53 的原生點陣字**，不是把 TTF 縮小去 rasterize——
+  1990 年代 DOS 中文的原貌就是倚天，縮 TTF 會糊掉、筆劃比例也不對。
+  低解析 16×15、高解析 24×24 各烘一份，共 2,889 個字。
+- **畫面拉到 640×400**：SCI 原本是 320×200，中文塞不下。拉畫布而不是縮字。
+  背景美術仍是原本的 320×200 放大，只有文字走高解析——這樣中文銳利，但不會跟美術打架。
+- **F8 切換中英文**：想看原文的雙關怎麼寫，隨時按 F8 切回英文，再按一次切回中文。
+- **內建 Roland MT-32 音源**（Munt）。MT-32 的音色遠好過 AdLib，這款當年也附了 MT32.DRV。
+  ROM 有版權，不隨附；自備 `MT32_CONTROL.ROM`／`MT32_PCM.ROM` 放進遊戲資料夾，
+  在音效選項選 Roland MT-32 即可。
+
+## 需要準備什麼
+
+這個 repo 只放中文化用的 patch 與資料，**不含遊戲本體**。你需要一份自己的
+《Freddy Pharkas: Frontier Pharmacist》（CD 版或磁片版皆可，本專案在 CD 版上驗證）。
+
+## 安裝
+
+1. 從 Releases 下載對應平台的壓縮檔並解開。
+2. 把 `cht-data/` 裡的 `translation.tsv`、`freddy_big5.fnt`、`freddy_big5_hi.fnt`
+   複製到遊戲資料夾（或用啟動器附的 `--extrapath` 參數指過去）。
+3. 用附的啟動腳本執行，或自行指定：
+
+   ```
+   scummvm --path=<你的遊戲資料夾> --extrapath=<cht-data 資料夾> freddypharkas
+   ```
+
+4. **中文要靠 target 設定啟用，不是命令列參數**。在 ScummVM 的遊戲設定裡把語言設成
+   繁體中文，或直接在 `scummvm.ini` 的 target 區段加一行：
+
+   ```ini
+   [freddypharkas]
+   engineid=sci
+   gameid=freddypharkas
+   path=<你的遊戲資料夾>
+   extrapath=<cht-data 資料夾>
+   language=tw
+   subtitles=true
+   ```
+
+## 中文資料
+
+| 檔案 | 說明 |
+|---|---|
+| [`docs/manual-highlights.md`](docs/manual-highlights.md) | 原版手冊的中文重點索引。**這款遊戲的解謎關鍵在手冊裡**——處方要照手冊的配方、劑量、單位去調，沒有手冊過不了關。 |
+| [`docs/walkthrough-sw61.md`](docs/walkthrough-sw61.md) | ACT I～II 的謎題提示，整理自《軟體世界》61 期。 |
+| [`docs/walkthrough-sw62.md`](docs/walkthrough-sw62.md) | ACT II 後段到結局，整理自《軟體世界》62 期。 |
+
+攻略維持原刊「問題 → 三層提示（由淺入深，第三層才是做法）」的形式，卡關時可以只看第一層。
+
+## 技術做法
+
+中文化全部做在 ScummVM 的 SCI 引擎裡，遊戲原始資源一個位元組都沒動。
+
+- **以內容為 key 的替換**：引擎每次要畫字時，拿英文原文去 `translation.tsv` 查表換成 Big5。
+  查不到就照樣顯示英文，不會壞。查表前會把字串的空白正規化（SCI 的訊息資源內嵌 `\r\n`，
+  而 tsv 的 key 是單行），否則實機永遠對不上。
+- **`kFormat` 動態句**：像「你有 %d 塊錢」這種帶入變數的句子，畫出來時已經填好值，
+  內容比對抓不到模板。所以在 `kFormat` 帶入參數**之前**先把模板換成中文，
+  並重新對應參數順序；中文模板若規格對不上就退回英文，不會錯位當機。
+- **長訊息被切段**：遊戲腳本會把長對白切成好幾個視窗分次顯示，切點落在句末標點，
+  整句查表因此查不到。引擎加了句段對齊的回退——在譯表裡找出哪一則原文的某段連續句子
+  剛好等於要畫的字串，回傳對應的中文句段（中英句數不一致就放棄，寧可露原文也不亂配）。
+- **斷行**：SCI 的無空格斷行原本走日文 PC-98 的禁則處理，套到 Big5 會把行首字的左偏旁裁掉
+  （「你」變「尔」）。繁中路徑改成標準中文 word-wrap：斷在容得下的最後一個字。
+
+引擎改動全部收在 `patches/0001-sci-cht-zh_twn.patch` 與 `patches/fontchinese.{h,cpp}`，
+基準是 ScummVM commit [`3d408ec3`](https://github.com/scummvm/scummvm/commit/3d408ec3516f7c29314d8ae8fb7916f31c9cd9aa)。
+
+## 自己重建
+
+```bash
+# 1) 套 patch 到乾淨的 ScummVM 原始碼（目錄不存在會自動 clone 並 checkout pinned commit）
+tools/apply_patches.sh /path/to/scummvm-src
+
+# 2) 編譯（MT-32 一定要啟用，不要帶 --disable-mt32emu）
+cd /path/to/scummvm-src
+./configure --disable-all-engines --enable-engine=sci --disable-detection-full
+make -j$(nproc)
+grep USE_MT32EMU config.h        # 應為 #define
+
+# 3) 產 runtime 譯文表與倚天 Big5 字型，部署到遊戲資料夾
+tools/build_and_deploy.sh
+```
+
+翻譯檔的維護真相是 `translation/done/*.tsv`（每批 180 則）與 `translation/full_skeleton.tsv`
+（完整 worklist）。改完譯文後跑：
+
+```bash
+python3 tools/validate_translations.py    # 結構、控制序列、Big5、譯名一致性
+python3 tools/normalize_done.py           # 全形標點、統一譯名、非 Big5 字元替換
+bash    tools/build_and_deploy.sh         # 重新 merge + 烘字型 + 部署
+```
+
+`tools/cap_rooms.sh` 會開 headless ScummVM 巡場景截圖，並收集引擎回報的
+`CHT-MISS`（畫面上還有哪些字沒被翻到）——這是驗收「還有沒有英文殘留」最直接的訊號，
+比人工翻截圖找可靠。
+
+## 已知限制
+
+- 遊戲內建的除錯／開發工具畫面（Sierra 忘了拿掉的文字編輯器）維持英文。
+- 背景美術裡畫死的英文招牌（`MOM'S CAFE`、`Prescriptions`）沒有改，維持原版風貌。
+- 攻略文件是依《軟體世界》原刊的問答邏輯重新整理改寫，不是逐字轉錄。
+
+## 版權與致謝
+
+- 遊戲本體版權屬 Sierra On-Line／Activision。本專案不含任何遊戲資源。
+- 《軟體世界》的廣告與攻略版權屬原作者（攻略作者 GUDERIAN）與雜誌社，此處作為當年史料引用。
+- Roland MT-32 ROM 有版權，不隨附。
+- ScummVM 依 GPLv3 授權，本專案的引擎改動同樣依 GPLv3 釋出。
+- 感謝 Al Lowe 與 Josh Mandel 寫出這部作品，以及 ScummVM 團隊三十年來把這些遊戲留了下來。

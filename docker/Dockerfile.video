@@ -1,0 +1,6 @@
+FROM debian:12-slim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg imagemagick fonts-noto-cjk fonts-wqy-zenhei \
+ && sed -i 's/rights="none" pattern="@\*"/rights="read" pattern="@*"/' /etc/ImageMagick-6/policy.xml 2>/dev/null || true \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /w

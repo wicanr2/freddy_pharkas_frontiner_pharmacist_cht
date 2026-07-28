@@ -1,0 +1,76 @@
+New save-game directory:	New save-game directory:
+with:	with:
+You must type a description for the game.	You must type a description for the game.
+Select the game that you would like to restore.	Select the game that you would like to restore.
+Type the description of this saved game.	Type the description of this saved game.
+Your save game disk is full. You must either use another disk or save over an existing saved game.	Your save game disk is full. You must either use another disk or save over an existing saved game.
+GAME	GAME
+Insert the %s disk in drive %s.	Insert the %s disk in drive %s.
+SAVE GAME	SAVE GAME
+That game was saved under a different interpreter. It cannot be restored.	That game was saved under a different interpreter. It cannot be restored.
+[control $%x]	[control $%x]
+Error in (%s check:) totAngle [%d] != +-360	Error in (%s check:) totAngle [%d] != +-360
+DRAGGING: %d, %d	DRAGGING: %d, %d
+%d.pol	%d.pol
+The file '%s' already exists	The file '%s' already exists
+Error opening '%s'	Error opening '%s'
+; %s : Picture %d	; %s : Picture %d
+%s.mem	%s.mem
+%s.log	%s.log
+Log file "%s" exists	Log file "%s" exists
+QA-COMMENT%d	QA-COMMENT%d
+Comment line %d of %d:	Comment line %d of %d:
+%s [Collection of size %d]	%s [Collection of size %d]
+%s [List of size %d]	%s [List of size %d]
+%s [Set of size %d]	%s [Set of size %d]
+Door Key	Door Key
+Penelope's Rx	Penelope's Rx
+Helen's Rx	Helen's Rx
+Madame's Rx	Madame's Rx
+Shot Glass	Shot Glass
+Under Glass	Under Glass
+Prep G	Prep G
+Tower H20	Tower H20
+Tin Can	Tin Can
+Ice Pick	Ice Pick
+Leather Strap	Leather Strap
+Open Beer	Open Beer
+Empty Bottles	Empty Bottles
+Church Key	Church Key
+Pure Solution	Pure Solution
+Nitrous Oxide	Nitrous Oxide
+Baking Soda	Baking Soda
+Post Cards	Post Cards
+Candle Wax	Candle Wax
+Desk Key	Desk Key
+Deposit Key	Deposit Key
+Cleaning Kit	Cleaning Kit
+Empty Mold	Empty Mold
+Wax Filled Mold	Wax Filled Mold
+Silver Filled Mold	Silver Filled Mold
+Wax Ear	Wax Ear
+Silver Ear	Silver Ear
+Claim Check	Claim Check
+Sharp Ear	Sharp Ear
+Paper Sack	Paper Sack
+Filled Sack	Filled Sack
+Horse Plop	Horse Plop
+Outta here!	Outta here!
+Carrie Sue	Carrie Sue
+Rover, the town dog	Rover, the town dog
+Trixie, the town sheep	Trixie, the town sheep
+Duck Gillespie	Duck Gillespie
+Colonel Shanders	Colonel Shanders
+Francis Bacon	Francis Bacon
+See them tumblin' down	See them tumblin' down
+Preacher's Kid	Preacher's Kid
+Ol' Pickaxe Pete	Ol' Pickaxe Pete
+Officer Wilke	Officer Wilke
+Pony Express Rider	Pony Express Rider
+Miz Tucker	Miz Tucker
+Miss Eulalie	Miss Eulalie
+Bridget and Rocko O'Hanrahan	Bridget and Rocko O'Hanrahan
+Old Man	Old Man
+Old Lady	Old Lady
+molten silver	molten silver
+w/ medallion	w/ medallion

@@ -1,0 +1,73 @@
+# 拒絕優先（deny-by-default）：預設忽略所有東西，只有下面明列的才進版控。
+#
+# 為什麼不用黑名單：這個工作目錄裡同時放著遊戲本體（game/、game_cd/）、
+# 600 MB 的 resource.aud、ScummVM 完整原始碼樹與編出來的 binary（scummvm-src/）、
+# headless 擷取產物（out/、extract/）、Sierra 原版手冊（manual/）與 MT-32 ROM。
+# 黑名單只要漏一條就會把遊戲檔或 ROM 推上公開 repo。白名單漏了頂多是少收一個檔。
+*
+
+!.gitignore
+!README.md
+!LICENSE
+
+# 引擎改動（patch-only 交付的本體）
+!patches/
+!patches/**
+
+# 建置、驗證、擷取工具
+!tools/
+!tools/**
+!docker/
+!docker/**
+
+# 翻譯來源真相：worklist 骨架 + 各批譯文 + corrections
+!translation/
+!translation/**
+
+# runtime 產物：Big5 譯文表與倚天點陣字型（玩家實際要放進遊戲夾的檔）
+!dist-cht/
+!dist-cht/**
+
+# 中文文件與 README 圖
+!docs/
+!docs/**
+!images/
+!images/**
+
+# ---- 白名單之上再擋一層：以下無論在哪個目錄都不准入庫 ----
+# 遊戲資源
+RESOURCE.*
+resource.*
+*.AUD
+*.aud
+*.MAP
+*.msg
+*.scr
+*.hep
+*.v56
+*.p56
+*.snd
+# 音源 ROM（有版權）
+*.ROM
+*.rom
+# 封裝檔與大型二進位
+*.zip
+*.7z
+*.iso
+*.tar.gz
+*.exe
+*.dll
+*.AppImage
+*.dmg
+# Sierra 原版手冊全文（有版權，只在本機留著供對照）
+manual/
+# 編譯產物
+*.o
+*.a
+*.so
+__pycache__/
+*.pyc
+
+# 倚天中文系統 3.53 的原始點陣字檔（商業字型，有版權）：只在本機保留供烘字型用，
+# 不隨 repo 散布。repo 只放烘好的 Big5 子集字型 dist-cht/*.fnt（本作實際用到的 2,889 字）。
+tools/assets/eten/
