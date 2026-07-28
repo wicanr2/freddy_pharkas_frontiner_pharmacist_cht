@@ -58,7 +58,10 @@ Coarsegold：主角佛萊迪·法卡斯年輕時是鎮上最快的槍手，某�
    `freddy_big5_hi.fnt`。啟動腳本會用 `extrapath` 指過去，不必手動搬；
    要自己下指令的話，把這個資料夾當 `--extrapath` 就行。
 3. Windows 版把遊戲資料夾拖到 `玩-多情藥師酷牛仔-繁中.bat` 上即可；
-   Linux 版執行 `AppRun`／AppImage 並把遊戲資料夾當第一個參數。自行指定則是：
+   Linux 版執行 AppImage 並把遊戲資料夾當第一個參數；
+   macOS 版是 universal（Intel 與 Apple Silicon 都能跑），
+   **第一次打開前要先在終端機執行 `xattr -dr com.apple.quarantine /Applications/ScummVM.app`**
+   ——它沒有 Apple 開發者簽章，Gatekeeper 預設會擋。自行指定則是：
 
    ```bash
    # Linux（AppImage，遊戲資料夾當第一個參數）
