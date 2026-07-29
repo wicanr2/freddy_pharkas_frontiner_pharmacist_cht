@@ -111,14 +111,17 @@ timeout $((SECS + 180)) docker run --rm --name "freddy-video-cap-$SHOT" --cpus=2
     # 用除錯器換到目標場景(不玩劇情)。
     # [雷] 只下一次會失敗:遊戲還在載入/還在選單時下 room,指令會被隨後載入的起始場景蓋掉,
     #      結果整鏡都停在起始街景。下兩次(第二次是冪等的)才穩。
+    # [雷] 關除錯器要打 exit,不是再按一次 ctrl+alt+d。
+    #   主控台自己就寫著 "type 'exit' to return to the game"。用 ctrl+alt+d 切回去常常
+    #   不生效 → 主控台整片蓋在畫面上,錄下來就是一片黑底綠字(而 room 指令其實早就成功了,
+    #   log 會印 "Room number changed to N")。Escape 當第二道保險。
     jump() {
       xdotool key ctrl+alt+d; sleep 3
-      xdotool type --delay 60 "room $ROOM"; xdotool key Return; sleep 3
-      xdotool key ctrl+alt+d; sleep 5
+      xdotool type --delay 60 "room $ROOM"; xdotool key Return; sleep 2
+      xdotool type --delay 60 "exit"; xdotool key Return; sleep 3
+      xdotool key Escape; sleep 4
     }
-    # [雷] 關掉除錯器後不要再按 Escape:特寫類場景(如配藥檯 620)會被 Escape 退回街景,
-    #      看起來就像換場失敗。cap_rooms.sh 按 Escape 是為了清殘留對話框,這裡不需要。
-    if [ "$ROOM" != "0" ]; then jump; jump; fi
+    if [ "$ROOM" != "0" ]; then jump; fi
     import -window root "/w/out/video_src/${SHOT}_check.png" 2>/dev/null || true
 
     # 操作序列在背景送鍵,ffmpeg 在前景錄滿 SECS 秒

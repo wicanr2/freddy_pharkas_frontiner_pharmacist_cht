@@ -70,14 +70,21 @@ adhalf() { # $1 廣告裁切區 $2 out.png
 adhalf "330x206+100+582"  "$T/ad_saloon_L.png"
 adhalf "330x206+100+825"  "$T/ad_cafe_L.png"
 
-# 廣告全幅(第 2 段)
-convert "$T/bg.png" \( "$AD" -resize x900 \) -gravity center -geometry +0-40 -composite \
-  -font "$FONT_BODY" -pointsize 30 -fill "$DIM" -gravity south -annotate +0+40 \
-  "《軟體世界》雜誌刊登的中文廣告" "$T/seg02_base.png"
+# 廣告全幅(第 2 段)—— 左圖右文,標題不壓在廣告上
+convert "$T/bg.png" \( "$AD" -resize x950 -bordercolor "$ACCENT_DK" -border 2 \) \
+  -gravity west -geometry +170+0 -composite "$T/seg02_base.png"
 convert "$T/seg02_base.png" \
-  -font "$FONT_TITLE" -pointsize 46 -fill "$ACCENT_DK" -gravity north -annotate +3+63 "一齣充滿歡樂爆笑的西部鬧劇！" \
-  -font "$FONT_TITLE" -pointsize 46 -fill "$ACCENT"    -gravity north -annotate +0+60 "一齣充滿歡樂爆笑的西部鬧劇！" \
-  "$T/seg02.png"
+  -font "$FONT_TITLE" -pointsize 48 -fill "$ACCENT_DK" -annotate +953+303 "一齣充滿歡樂爆笑的西部鬧劇！" \
+  -font "$FONT_TITLE" -pointsize 48 -fill "$ACCENT"    -annotate +950+300 "一齣充滿歡樂爆笑的西部鬧劇！" \
+  -font "$FONT_TITLE" -pointsize 48 -fill "$ACCENT_DK" -annotate +953+383 "一個富有傳奇色彩的西部人物！" \
+  -font "$FONT_TITLE" -pointsize 48 -fill "$ACCENT"    -annotate +950+380 "一個富有傳奇色彩的西部人物！" \
+  -font "$FONT_BODY" -pointsize 34 -fill "$TEXT" \
+  -annotate +950+510 "台灣當年以《多情藥師酷牛仔》的譯名上市，" \
+  -annotate +950+565 "《軟體世界》刊過整頁彩色廣告，還連載了兩期攻略。" \
+  -font "$FONT_BODY" -pointsize 44 -fill "$DIM" \
+  -annotate +950+700 "那個年代，它沒有中文版。" \
+  -font "$FONT_BODY" -pointsize 26 -fill "$DIM" \
+  -annotate +950+820 "圖片來源：《軟體世界》雜誌廣告" "$T/seg02.png"
 
 echo ">> 前景文字層"
 # 1. 冷開場對照(分割線 + 左右標)
@@ -104,40 +111,42 @@ band "$T/fg07.png" "選單、按鈕、說明，全是中文" "載入・序幕・
 band "$T/fg08.png" "解謎核心在配藥" "查手冊、對劑量、照步驟做——沒有手冊過不了關。"
 band "$T/fg09.png" "按 F8 隨時切回英文原文" "想看原文的雙關怎麼寫，按一下就好。"
 
-# 5. 大引號對白卡(和其他版面明顯不同的視覺)
+# 5. 大引號對白卡(和其他版面明顯不同的視覺;使用者特別喜歡「馬脹氣」這條線)
 convert "$T/bg.png" \
-  -font "$FONT_TITLE" -pointsize 300 -fill "#d6ae3140" -annotate +120+380 "\"" \
-  -font "$FONT_BODY" -pointsize 58 -fill "$TEXT" \
-  -annotate +260+420 "不知是誰家可憐的馬，" \
-  -annotate +260+500 "正在排放大量刺鼻的甲烷氣體。" \
-  -font "$FONT_BODY" -pointsize 34 -fill "$DIM" \
-  -annotate +260+590 "Somebody's poor horse seems to be dispelling" \
-  -annotate +260+635 "huge quantities of a noxious methane compound." \
-  -font "$FONT_BODY" -pointsize 30 -fill "$ACCENT" -gravity south -annotate +0+90 \
-  "旁白比主角本人還嘴賤" "$T/seg05.png"
+  -font "$FONT_TITLE" -pointsize 260 -fill "#d6ae3138" -annotate +150+400 "「" \
+  -font "$FONT_TITLE" -pointsize 260 -fill "#d6ae3138" -annotate +1600+820 "」" \
+  -font "$FONT_BODY" -pointsize 62 -fill "$TEXT" \
+  -annotate +320+460 "不知是誰家可憐的馬，" \
+  -annotate +320+550 "正在排放大量刺鼻的甲烷氣體。" \
+  -font "$FONT_BODY" -pointsize 32 -fill "$DIM" \
+  -annotate +320+645 "Somebody's poor horse seems to be dispelling" \
+  -annotate +320+690 "huge quantities of a noxious methane compound." \
+  -font "$FONT_BODY" -pointsize 32 -fill "$ACCENT" -gravity south -annotate +0+110 \
+  "旁白比主角本人還嘴賤——這種句子，全遊戲有五千多則" "$T/seg05.png"
 
 # 10. 成果卡
 convert "$T/bg.png" \
-  -font "$FONT_TITLE" -pointsize 64 -fill "$ACCENT_DK" -gravity north -annotate +3+153 "整套都是中文的" \
-  -font "$FONT_TITLE" -pointsize 64 -fill "$ACCENT"    -gravity north -annotate +0+150 "整套都是中文的" \
-  -font "$FONT_BODY" -pointsize 46 -fill "$TEXT" -gravity north \
-  -annotate +0+300 "5,166 / 5,181 則文字　（99.7%）" \
-  -annotate +0+380 "倚天點陣字 2,889 字　・　畫布 640×400" \
-  -annotate +0+460 "對白　旁白　道具欄　選單　藥品名　片頭片尾　結局" \
-  -font "$FONT_BODY" -pointsize 40 -fill "$DIM" -gravity north \
-  -annotate +0+600 "Linux　・　Windows　・　macOS" \
+  -font "$FONT_TITLE" -pointsize 72 -fill "$ACCENT_DK" -gravity north -annotate +3+203 "整套都是中文的" \
+  -font "$FONT_TITLE" -pointsize 72 -fill "$ACCENT"    -gravity north -annotate +0+200 "整套都是中文的" \
+  -font "$FONT_BODY" -pointsize 52 -fill "$TEXT" -gravity north \
+  -annotate +0+390 "5,166 / 5,181 則文字　（99.7%）" \
+  -annotate +0+480 "倚天點陣字 2,889 字　・　畫布 640×400" \
+  -annotate +0+570 "對白　旁白　道具欄　選單　藥品名　片頭片尾　結局" \
+  -font "$FONT_BODY" -pointsize 46 -fill "$DIM" -gravity north \
+  -annotate +0+730 "Linux　・　Windows　・　macOS" \
   "$T/seg10.png"
 
 # 11. 片尾卡
 convert "$T/bg.png" \
-  -font "$FONT_TITLE" -pointsize 76 -fill "$ACCENT_DK" -gravity north -annotate +3+243 "多情藥師酷牛仔" \
-  -font "$FONT_TITLE" -pointsize 76 -fill "$ACCENT"    -gravity north -annotate +0+240 "多情藥師酷牛仔" \
-  -font "$FONT_BODY" -pointsize 38 -fill "$TEXT" -gravity north -annotate +0+360 \
+  -font "$FONT_TITLE" -pointsize 88 -fill "$ACCENT_DK" -gravity north -annotate +3+283 "多情藥師酷牛仔" \
+  -font "$FONT_TITLE" -pointsize 88 -fill "$ACCENT"    -gravity north -annotate +0+280 "多情藥師酷牛仔" \
+  -font "$FONT_BODY" -pointsize 42 -fill "$TEXT" -gravity north -annotate +0+420 \
   "Freddy Pharkas: Frontier Pharmacist　繁體中文化" \
-  -font "$FONT_BODY" -pointsize 32 -fill "$DIM" -gravity north \
-  -annotate +0+520 "致敬 Al Lowe、Josh Mandel，以及三十年來把這些遊戲留下來的 ScummVM 團隊" \
-  -annotate +0+590 "廣告圖出自《軟體世界》　・　遊戲版權屬 Sierra On-Line／Activision" \
-  -annotate +0+660 "配樂為原版遊戲音樂（Roland MT-32）　・　本片僅供個人保存，不公開散布" \
+  -font "$FONT_BODY" -pointsize 34 -fill "$TEXT" -gravity north \
+  -annotate +0+600 "致敬 Al Lowe、Josh Mandel，以及三十年來把這些遊戲留下來的 ScummVM 團隊" \
+  -font "$FONT_BODY" -pointsize 30 -fill "$DIM" -gravity north \
+  -annotate +0+700 "廣告圖出自《軟體世界》　・　遊戲版權屬 Sierra On-Line／Activision" \
+  -annotate +0+760 "配樂為原版遊戲音樂（Roland MT-32）　・　本片僅供個人保存，不公開散布" \
   "$T/seg11.png"
 
 echo ">> 逐段算繪"

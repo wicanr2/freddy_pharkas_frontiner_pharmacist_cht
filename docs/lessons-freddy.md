@@ -109,3 +109,41 @@ Edukashun Street 3 種。
 
 另外要用引擎自己的除錯器巡場景（`Ctrl+Alt+D` → `room N` → 再按一次關閉），
 比想辦法讓 bot 走完劇情實際得多。
+
+## 12. 推廣片:除錯器主控台要打 `exit` 關,不是再按一次 Ctrl+Alt+D
+
+錄推廣片時整鏡錄到一片黑底綠字——那是 ScummVM 的除錯器主控台蓋在畫面上。
+`room N` 其實**早就成功了**(主控台自己印 `Room number changed to 670`),
+壞的是關閉那一步:再按一次 `ctrl+alt+d` 常常不生效。
+
+主控台第一行就寫著 `type 'exit' to return to the game`。照做:
+
+```
+xdotool key ctrl+alt+d
+xdotool type "room $ROOM"; xdotool key Return
+xdotool type "exit";       xdotool key Return   # ← 關鍵
+xdotool key Escape                              # 第二道保險
+```
+
+診斷順序也值得記:先看**錄到的畫面**,再回頭看 log。畫面上有主控台文字 = 沒關掉;
+畫面是別的場景 = 真的沒換過去。兩者的修法完全不同,別混。
+
+**中途走過的兩條冤枉路**:先以為是「載入時間浮動,room 指令下太早被起始場景蓋掉」,
+所以改成下兩次——沒用,因為指令本來就成功。接著以為是「關掉除錯器後那個 Escape
+把特寫場景退回街景」,把 Escape 拿掉——反而更糟,因為 Escape 正是當時唯一有效的關閉方式。
+兩次都是在沒看清楚症狀就先猜成因。
+
+## 13. `pgrep -f` 會匹配到自己那行等待指令
+
+想等背景批次跑完再接手,寫了:
+
+```bash
+until ! pgrep -f cap_promo_all.sh; do sleep 15; done   # 永遠不會結束
+```
+
+這行**自己的命令列就含有 `cap_promo_all.sh`**,`pgrep -f` 比對的是完整命令列,
+所以它永遠找得到一個匹配(它自己),迴圈不會結束。同一個坑踩了兩次:第二次是
+`pkill -f 'until ! pgrep'`,那行自己也含有 `until ! pgrep`,結果把自己殺掉(exit 144)。
+
+要等背景工作,用檔案存在與否當條件,或直接等 harness 的完成通知,別用 `pgrep -f` 比對
+一個會出現在自己命令列裡的字串。
