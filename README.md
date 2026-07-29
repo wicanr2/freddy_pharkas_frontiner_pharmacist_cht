@@ -111,6 +111,26 @@ Leisure Suit Larry」。
   ROM 有版權，不隨附；自備 `MT32_CONTROL.ROM`／`MT32_PCM.ROM` 放進遊戲資料夾，
   在音效選項選 Roland MT-32 即可。
 
+## 線上試玩：配藥檯
+
+這款遊戲的防拷手段很少見——它不問你手冊第幾頁第幾個字，而是把手冊變成解謎本身。
+顧客拿處方箋上門，你得翻實體手冊查出配方、成分、劑量、單位，照步驟調配。沒有手冊，配不出藥。
+
+我們把那套流程搬上網頁，不用安裝任何東西就能試：
+
+### 👉 [wicanr2.github.io/freddy_pharkas_dispensary](https://wicanr2.github.io/freddy_pharkas_dispensary/)
+
+- **7 則配方**照原版手冊《The Modern Day Book of Health and Hygiene》逐字抄錄，份量單位未作換算
+- **做錯時跳出來的是遊戲自己的台詞**——「研缽與杵只能用來磨固體」「量筒只能用來量液體」這些
+  提示的中文，就是本專案譯文表裡的同一批字串
+- 附**脹氣光譜對照表**：遊戲裡真正的關鍵解謎表，用氣體分光鏡對著酒精燈燒樣本，看火焰顏色判斷病因
+
+畫面用的是原版遊戲的背景與器材圖像，瓶罐擺在層架上的方式也跟原版一樣（原版的空層架是背景 `pic`，
+瓶罐是動態疊上去的 `view`）。頁面另附一份[還原度驗收報告](https://github.com/wicanr2/freddy_pharkas_dispensary/blob/main/docs/FIDELITY-REVIEW.md)，
+如實記錄它跟原版的差距——原版是按住拖曳藥罐到器材上，網頁簡化成點選填數字。
+
+原始碼與素材清單：[github.com/wicanr2/freddy_pharkas_dispensary](https://github.com/wicanr2/freddy_pharkas_dispensary)
+
 ## 需要準備什麼
 
 這個 repo 只放中文化用的 patch 與資料，**不含遊戲本體**。你需要一份自己的
