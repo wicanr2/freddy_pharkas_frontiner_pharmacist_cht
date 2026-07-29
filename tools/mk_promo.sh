@@ -41,7 +41,7 @@ still() { # $1 png $2 secs $3 out.mp4
   local fo; fo=$(awk "BEGIN{print $2-0.4}")
   ffmpeg -y -loglevel error -loop 1 -i "$1" -t "$2" -r $FPS \
     -vf "fade=t=in:st=0:d=0.4,fade=t=out:st=$fo:d=0.4,format=yuv420p" \
-    -threads 2 -c:v libx264 -preset veryfast -pix_fmt yuv420p "$3"
+    -threads 2 -c:v libx264 -preset ultrafast -pix_fmt yuv420p "$3"
 }
 
 live() { # $1 raw.mkv $2 起點秒 $3 長度 $4 fg.png $5 out.mp4 [$6 額外overlay.png(貼在遊戲畫面上)]
@@ -50,11 +50,11 @@ live() { # $1 raw.mkv $2 起點秒 $3 長度 $4 fg.png $5 out.mp4 [$6 額外over
     extra="[b][3:v]overlay=${GX}:${GY}[c];"
     ffmpeg -y -loglevel error -loop 1 -i "$T/bg.png" -ss "$2" -t "$3" -i "$1" -i "$4" -i "$6" \
       -filter_complex "[1:v]${CROP},${SCALE},setpts=PTS-STARTPTS[g];[0:v][g]overlay=${GX}:${GY}[b];${extra}[c][2:v]overlay=0:0,fade=t=in:st=0:d=0.4,fade=t=out:st=$fo:d=0.4,format=yuv420p[o]" \
-      -map "[o]" -t "$3" -r $FPS -threads 2 -c:v libx264 -preset veryfast -pix_fmt yuv420p "$5"
+      -map "[o]" -t "$3" -r $FPS -threads 2 -c:v libx264 -preset ultrafast -pix_fmt yuv420p "$5"
   else
     ffmpeg -y -loglevel error -loop 1 -i "$T/bg.png" -ss "$2" -t "$3" -i "$1" -i "$4" \
       -filter_complex "[1:v]${CROP},${SCALE},setpts=PTS-STARTPTS[g];[0:v][g]overlay=${GX}:${GY}[b];[b][2:v]overlay=0:0,fade=t=in:st=0:d=0.4,fade=t=out:st=$fo:d=0.4,format=yuv420p[o]" \
-      -map "[o]" -t "$3" -r $FPS -threads 2 -c:v libx264 -preset veryfast -pix_fmt yuv420p "$5"
+      -map "[o]" -t "$3" -r $FPS -threads 2 -c:v libx264 -preset ultrafast -pix_fmt yuv420p "$5"
   fi
 }
 
@@ -167,17 +167,22 @@ still "$T/seg11.png"            5.0      "$T/p11.mp4"
 echo ">> 串接"
 : > "$T/list.txt"
 for f in p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11; do echo "file '$T/$f.mp4'" >> "$T/list.txt"; done
-ffmpeg -y -loglevel error -f concat -safe 0 -i "$T/list.txt" -threads 2 \
-  -c:v libx264 -preset veryfast -pix_fmt yuv420p "$T/silent.mp4"
+# [效率] 所有片段的編碼參數一致 → concat 直接 -c copy,不必重編一遍。
+# 這一步和下面的混音各省掉一次全片重編,CPU 大約是原本的三分之一。
+ffmpeg -y -loglevel error -f concat -safe 0 -i "$T/list.txt" -c copy "$T/silent.mp4"
 
 DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$T/silent.mp4")
 FO=$(awk "BEGIN{print $DUR-3}")
 echo ">> 影片長度 ${DUR}s,鋪配樂"
 # [HARD] 先 aloop 無限循環再 atrim 到影片長度,不要 -shortest(見 kb 雷:結尾卡會被砍)
+# [HARD] 先寫暫存檔再 mv:直寫正式檔名時中途被中止(喊停/timeout/docker rm -f)
+#   會把上一版可播的成品截成 moov atom not found 的碎片。本代踩過。
+# [效率] -c:v copy 只編音訊,視訊直接搬過去。
 ffmpeg -y -loglevel error -i "$T/silent.mp4" -i "$SRC/music/bgm.wav" \
   -filter_complex "[1:a]aloop=loop=-1:size=2000000000,atrim=0:$DUR,afade=t=in:st=0:d=2,afade=t=out:st=$FO:d=3[a]" \
-  -map 0:v -map "[a]" -threads 2 -c:v libx264 -preset veryfast -pix_fmt yuv420p \
-  -c:a aac -b:a 192k -movflags +faststart "$OUT/freddy-cht-promo.mp4"
+  -map 0:v -map "[a]" -c:v copy -c:a aac -b:a 192k -movflags +faststart \
+  "$T/final.mp4"
+mv "$T/final.mp4" "$OUT/freddy-cht-promo.mp4"
 
 echo "== 完成 =="
 ffprobe -v error -select_streams v -show_entries stream=width,height,avg_frame_rate:format=duration -of default=nw=1 "$OUT/freddy-cht-promo.mp4"
