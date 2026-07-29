@@ -127,7 +127,9 @@ timeout $((SECS + 180)) docker run --rm --name "freddy-video-cap-$SHOT" --cpus=2
     # 操作序列在背景送鍵,ffmpeg 在前景錄滿 SECS 秒
     ( '"$OPS"' ) & OPPID=$!
 
-    ffmpeg -hide_banner -loglevel error -f x11grab -framerate 30 \
+    # [雷] -y 不能省:重錄同一鏡時 ffmpeg 會停下來問 "File already exists. Overwrite?"
+    #   然後直接退出。第一輪全新錄影不會遇到,一補錄就整批靜靜地沒有產出。
+    ffmpeg -y -hide_banner -loglevel error -f x11grab -framerate 30 \
            -video_size 1280x800 -i :99 -t "$SECS" \
            -c:v libx264 -preset ultrafast -qp 0 "/w/out/video_src/raw_$SHOT.mkv"
 
