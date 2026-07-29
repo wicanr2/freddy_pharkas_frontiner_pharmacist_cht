@@ -161,3 +161,16 @@ until ! pgrep -f cap_promo_all.sh; do sleep 15; done   # 永遠不會結束
 
 **教訓**:管線裡的 `| tail -N` 會把錯誤訊息一起丟掉。診斷「跑完但沒產出」時,
 第一件事是把過濾拿掉重跑一次,看完整輸出,而不是先猜成因。
+
+## 15. `montage` 對多張 1920×1080 會靜默失敗，改用 `+append` / `-append`
+
+做成品聯絡表時，`montage /t/f_*.png -tile 3x4 ...` **不產檔也不報錯**，只有後續的
+`identify` 才說找不到檔案。先縮成 480px、再 `-depth 8` 都無效。
+
+改用逐列 `convert a.png b.png c.png +append row.png`、再 `convert row1 row2 ... -append` 拼，
+一次就成功。推測是 ImageMagick 的資源上限（`montage` 會把全部圖同時載入記憶體），
+但沒有深究——因為 `+append` 這條路已經夠用。
+
+診斷順序值得記：這次是**先確認 `+append` 可行**、再判定問題出在 `montage`，
+而不是先猜「是不是 policy 擋了 / 是不是掛載沒寫入權限」。與第 12、14 則同源
+（見 CLAUDE.md ⑩：靜靜失敗先看完整證據，別先猜成因）。
