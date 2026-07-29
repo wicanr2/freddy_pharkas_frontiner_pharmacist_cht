@@ -1,10 +1,10 @@
-# 《多情藥師酷牛仔》繁中化推廣片 — 提案（第二版草稿）
+# 《多情藥師酷牛仔》繁中化推廣片 — 提案（定稿）
 
-狀態：第一輪 review 後修訂，待二審。未開拍、未剪輯、未發布。
-第 8 節（配樂授權）與第 13 節列的項目沒有結論之前不動工。
+**狀態：提案已通過 Hermes 二審；尚未獲授權開始製作。** 未開拍、未剪輯、未發布。
 
-第一版被判「需修改」的主要理由是節奏（前 19 秒都在看靜態廣告）與動態不足（幾乎是投影片）。
-這一版把冷開場提到 0 秒、把七個段落改成實機動態錄影、片長收到 62 秒，並改寫了配樂與引用策略。
+二審把發布範圍、片長、配樂路線、音效、短網址、配藥鏡降級門檻都定了下來，
+並要求三項工程修正（可重建的 Dockerfile、擷取腳本的行程收尾、安全界線）。這一版全部寫入。
+剩下的待決只有兩件，見第 15 節。
 
 ---
 
@@ -108,7 +108,7 @@
 | 7 | 0:35–0:43 | 8s | **live** | 配藥檯：取藥瓶、秤重、攪拌，中文提示逐步出現 | 解謎核心在配藥：查手冊、對劑量、照步驟做 | **補拍** room 620，最好帶到處方箋 |
 | 8 | 0:43–0:50 | 7s | **live** | 同一畫面現場按 F8：中文 → 英文 → 中文（操作序列見第 4 節） | 按 F8 隨時切回原文 | **補拍**，沿用 `out/f8` 的場景與台詞 |
 | 9 | 0:50–0:57 | 7s | still（數字逐項淡入） | 成果卡，背景是低亮度的遊戲畫面 | 5,166／5,181 則文字（99.7%）· 倚天點陣字 2,889 字 · 640×400 · Linux／Windows／macOS | 程序生成 |
-| 10 | 0:57–1:02 | 5s | still | 片尾 CTA：QR code（畫面右側，邊長 ≥ 320px）＋ 短網址（大字）＋ 完整 repo 網址（小字） | 致敬 Al Lowe、Josh Mandel 與 ScummVM；底部一行來源與權利聲明 | 程序生成，QR 離線產生 |
+| 10 | 0:57–1:02 | 5s | still | 片尾 CTA：QR code（畫面右側，邊長 ≥ 320px，編的是 repo 首頁完整網址）＋ 大字「GitHub @wicanr2」「多情藥師酷牛仔繁中化」＋ 完整 repo 網址小字 | 致敬 Al Lowe、Josh Mandel 與 ScummVM；底部一行來源與權利聲明 | 程序生成，QR 離線產生 |
 | | **合計** | **62s** | live 44s（7 段：#1 #3 #4 #5 #6 #7 #8）／still 18s（#2 #9 #10） | | | |
 
 字幕與旁白：**不配旁白**。中文 TTS 會把質感毀掉，找真人配音是另一個工程，不列入這一版。
@@ -156,13 +156,20 @@
 | #8 F8 現場切換 | 沿用 `out/f8` 街景 | 操作序列見第 4 節，要多錄幾條挑 |
 
 第 7 鏡的存檔問題是本片最大的製作風險：除錯器換場只能到達場景，不保證身上有正確的道具與任務狀態。
-**排程時把它排第一個做**，若三次嘗試仍拍不到可操作的配藥畫面，退回「配藥檯場景 + 中文介面特寫」的靜態方案，
-並在此註記降級原因。
+
+**排程時把它排第一個做，並設 30 分鐘 timebox。**（二審定案：用時間盒，不用「試三次」這種模糊計數——
+同一個問題試三次可能是三分鐘也可能是三小時。）30 分鐘內取不到正確任務狀態就降級：
+
+- **降級後仍必須是會動的畫面**——藥局／配藥檯場景的實機錄影，佛萊迪走位、鏡頭停在配藥檯，
+  搭配中文介面（藥品名、提示文字）的特寫推進。
+- **不得退回純靜態投影片**。這一鏡是「配藥是解謎核心」的唯一證據，靜止圖撐不起來。
+- 降級要在本節註記原因與當時卡在哪一步，不是默默換掉。
 
 ### 音訊
 
-`out/` 底下目前沒有任何音訊素材。依第 8 節，公開版用外部授權曲，需要另外取得並存放於
-`out/video_src/music/`（含授權證明檔）。遊戲音效只在必要時取極短片段（見第 8 節）。
+`out/` 底下目前沒有任何音訊素材，第一版也不會從遊戲抽任何音訊。
+依第 8 節，音軌只有一首外部授權配樂，存進 `out/video_src/music/`（含授權證明檔）；
+**不使用任何原版遊戲音效**。
 
 ## 8. 配樂與引用策略
 
@@ -177,23 +184,32 @@
 
 這不是放寬對素材真實性的要求，而是把「真實性」的適用範圍講清楚：真實性管畫面，合法性管音樂。
 
-### 公開版配樂：CC0 或 CC BY 的西部風配樂
+### 公開版配樂：CC0 優先、CC BY 備選（二審定案）
 
 | 項目 | 要求 |
 |---|---|
-| 授權 | **CC0** 或 **CC BY**，且明確允許商用與再散布（影音平台的營利化與轉載都算） |
-| 證據保存 | 下載頁快照、授權條款全文、作者與曲名，一併存進 `out/video_src/music/LICENSE/` |
-| Attribution | CC BY 必須在片尾與發布說明兩處標示；CC0 也標，成本低而爭議少 |
+| 授權 | **CC0 優先**；找不到合適的才退 **CC BY**。兩者都必須明確允許商用與再散布 |
+| 可驗證性 | 授權必須查得到、標得出來——來源頁、授權版本、作者、曲名缺一不可 |
+| 證據保存 | 下載頁快照、授權條款全文、作者與曲名，存進 `out/video_src/music/LICENSE/` |
+| Attribution | CC BY 必須在片尾與 Release 說明兩處標示；CC0 也標，成本低而爭議少 |
 | 排除 | NC（禁商用）、ND（禁改作）一律不用——影片會裁剪與淡入淡出，屬於改作 |
 
-**原版 MT-32 側錄與 CD 演唱錄音都不進公開版。** 本機懷舊版（配上原版音樂、只留在
-`out/video/local/`、永不上傳）如果要做，另案處理，不能成為主流程的依賴——
-也就是說，主片的製作流程不可以有任何一步需要先產出懷舊版。
+**選曲流程**：正式製作前先提 **3 首候選**給 Hermes 選，附授權連結、授權版本、作者、
+以及各 30 秒的試聽片段。**現階段不下載、不剪輯任何音樂**——候選清單本身也要等開拍授權下來才做。
 
-### 遊戲音效
+**原版 MT-32 側錄與 CD 演唱錄音都不進公開版。**
 
-只取必要的極短片段（例如一次開門聲、一次翻頁聲），用於強調操作，總長控制在 3 秒以內，
-且不與配樂搶。若審稿認為連短音效都不要，全片純配樂也成立，不影響其他段落。
+### 本機懷舊版：不做（二審定案）
+
+原本列為「另案可選」的本機懷舊版（配原版音樂、永不上傳）**確定不做**。
+理由是它會在流程裡多一條需要 MT-32 ROM 與原版音訊的岔路，而它對主片沒有任何貢獻。
+`/home/anr2/cht/mt32` 的 ROM 在本專案的影片流程中完全不會被讀取。
+
+### 遊戲音效：第一版不用（二審定案）
+
+第一版全片**只有授權配樂，不混入任何原版遊戲音效**。
+原因是音效同樣是原版著作，且混音會多出一組變數（電平平衡、與配樂打架、逐段對齊），
+在第一版沒有必要為此付代價。若之後想加，另開一版處理。
 
 ### 廣告與遊戲畫面的引用
 
@@ -210,33 +226,76 @@
 
 三段式，每段一支腳本、輸入輸出都是檔案，可重跑。
 
-### 前置：需要一顆帶 ffmpeg 的擷取 image
+### 前置：需要一顆帶 ffmpeg 的擷取 image（用 Dockerfile，不用 docker commit）
 
 實測結果：`freddy-capture:latest` **沒有 ffmpeg**（有 Xvfb／xdotool／ImageMagick／ScummVM runtime），
 `game-video:latest` 有 ffmpeg 與 x11grab 但沒有遊戲執行環境。live 錄影需要兩者在同一個容器裡。
 
-做法：以 `freddy-capture:latest` 為基底 `apt install ffmpeg qrencode`，`docker commit` 成
-**`freddy-video-capture:latest`**，之後零安裝。這是本專案自建的新 image；
-**不動任何既有 image，不執行任何 prune 或 rmi。**
+二審要求**不要用 `apt install` 後 `docker commit`**——那樣建出來的 image 沒有可追溯的來源，
+換台機器或過幾個月就重建不出同一顆。改成 repo 內的 Dockerfile，跟既有的
+`docker/Dockerfile.build`／`.capture`／`.video` 同一套做法：
+
+```dockerfile
+# docker/Dockerfile.promo — live 錄影用(擷取環境 + ffmpeg + qrencode)
+FROM freddy-capture:latest
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ffmpeg qrencode \
+ && rm -rf /var/lib/apt/lists/*
+```
+
+```bash
+docker build -f docker/Dockerfile.promo -t freddy-video-capture:latest docker/
+```
+
+並在 `docker/build-images.sh` 加一行，讓它跟其他 image 一起重建。
+
+> **既有缺口（寫 promo 工具鏈時要一併修）**：`docker/build-images.sh` 目前整支沿用他專案的內容，
+> 建出來的標籤是 `qfg1-build`／`qfg1-capture`／`qfg1-video`，跟本專案實際在用的
+> `freddy-build`／`freddy-capture`／`game-video` 對不上。不修的話「repo 內可重建」只是名義上的。
+
+這是本專案自建的新 image；**不動任何既有 image，不執行任何 prune 或 rmi。**
 
 ### 第一段：擷取（`tools/cap_promo.sh`，待寫）
 
+第一版草稿的骨架最後一行是 `wait`，那是錯的：Xvfb 與 ScummVM 都是長駐行程，
+`wait` 會一直等它們，容器永遠不結束（CLAUDE.md ④-S 就記過同一個雷：headless 別 `wait` 背景 Xvfb）。
+正確寫法是**讓 ffmpeg 以固定 `-t` 在前景跑完當計時器**，長駐行程記下 PID 由 `trap` 收，外層再包 `timeout`：
+
 ```bash
-docker run --rm --name freddy-video-cap-<鏡號> --cpus=2 \
-  -v "$PWD":/w -w /w freddy-video-capture:latest bash -c '
-    Xvfb :99 -screen 0 1280x800x24 & sleep 2
-    ./scummvm-src/scummvm --config=/tmp/scummvm.ini freddypharkas &
+timeout 300 docker run --rm --name "freddy-video-cap-$SHOT" --cpus=2 \
+  -v "$PWD":/w -w /w freddy-video-capture:latest bash -uc '
+    SHOT="'"$SHOT"'"; SECS="'"$SECS"'"
+    XPID=""; GPID=""; OPPID=""
+    cleanup() {
+      for pid in "$OPPID" "$GPID" "$XPID"; do
+        [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+      done
+    }
+    trap cleanup EXIT INT TERM          # 只殺本容器內自己起的 PID
+
+    Xvfb :99 -screen 0 1280x800x24 >/dev/null 2>&1 & XPID=$!
+    sleep 2
+    export DISPLAY=:99
+    ./scummvm-src/scummvm --config=/tmp/scummvm.ini freddypharkas \
+        >"/w/out/video_src/$SHOT.log" 2>&1 & GPID=$!
     sleep 25
-    ffmpeg -f x11grab -framerate 30 -video_size 1280x800 -i :99 -t <秒數> \
-           -c:v libx264 -preset ultrafast -qp 0 /w/out/video_src/raw_<鏡號>.mkv &
-    <xdotool 操作序列>
-    wait
+
+    <錄影前的 xdotool 前置操作:換場、走到定位>
+
+    ( <錄影期間的 xdotool 操作序列> ) & OPPID=$!
+
+    # ffmpeg 前景跑滿 SECS 秒 = 這一鏡的計時器,結束即代表錄完
+    ffmpeg -hide_banner -loglevel error -f x11grab -framerate 30 \
+           -video_size 1280x800 -i :99 -t "$SECS" \
+           -c:v libx264 -preset ultrafast -qp 0 "/w/out/video_src/raw_$SHOT.mkv"
+
+    wait "$OPPID" 2>/dev/null || true   # 只等操作序列,不等 Xvfb/ScummVM
   '
 ```
 
-- 錄影用 `-qp 0` 無損中間檔，壓縮留到合成階段；中間檔不入版控。
+- 錄影用 `-qp 0` 無損中間檔，壓縮留到合成階段。
 - 場景用除錯器換（`Ctrl+Alt+D` → `room N`），不玩劇情；第 7 鏡例外（見第 7 節風險）。
-- **[HARD]** 一律 `timeout` 包住；收工只 `docker rm -f freddy-video-*`，不碰別人的容器與 image。
+- **[HARD]** 外層一律 `timeout` 包住；收工只 `docker rm -f freddy-video-*`，不碰別人的容器與 image。
 
 ### 第二段：素材（`tools/mk_promo_assets.sh`，待寫）
 
@@ -250,7 +309,9 @@ ffmpeg -i raw_03.mkv -vf "crop=640:400:480:304,scale=1280:800:flags=neighbor" ..
 # 廣告掃描非點陣，等比縮放後貼齊同尺寸框
 
 # QR code（離線產生，不連外）
-qrencode -o qr.png -s 10 -m 2 -l M "<短網址>"
+# 編的是 repo 首頁完整網址(不是某個 tag 或 release,那會隨版本失效)
+qrencode -o qr.png -s 10 -m 2 -l M \
+  "https://github.com/wicanr2/freddy_pharkas_frontiner_pharmacist_cht"
 ```
 
 字型先 `ls` 確認存在再用（kb 雷 #5：`fonts-noto-cjk` 只有 Regular／Bold，沒有 Medium）。中文字幕用襯線體。
@@ -258,7 +319,24 @@ qrencode -o qr.png -s 10 -m 2 -l M "<短網址>"
 ### 第三段：合成（`tools/mk_promo.sh`，待寫）
 
 `--cpus=2`、`-preset veryfast -threads 2`、不用 zoompan；配樂用 `aloop` 再 `atrim`，不加 `-shortest`。
-產物 `out/video/`，素材與無損中間檔 `out/video_src/`，兩者都在 `.gitignore` 內（deny-by-default 已涵蓋，實測確認）。
+產物 `out/video/`，素材與無損中間檔 `out/video_src/`。
+
+### 安全界線（二審要求，[HARD]）
+
+| 東西 | 進 git？ | 進 Release？ | 說明 |
+|---|---|---|---|
+| raw capture（`out/video_src/raw_*.mkv`） | **否** | **否** | 無損中間檔，動輒數百 MB，且逐幀都是原版遊戲畫面 |
+| 遊戲檔（`game/`、`resource.*`、`*.aud`） | **否** | **否** | 本專案自始就是 patch-only |
+| MT-32 ROM | **否** | **否** | 有版權；本片流程根本不會讀到（見第 8 節） |
+| 完整遊戲資料（任何形式） | **否** | **否** | 同上 |
+| 最終主片 mp4 | 否 | **是**（唯一允許的影片資產） | 只放最終成品，不放中間檔 |
+| README GIF | **是**（壓縮後 ≤5MB） | 否 | README 只放壓縮 GIF，不放 mp4 |
+
+`out/` 全域已被 deny-by-default 的 `.gitignore` 涵蓋（實測 `git check-ignore` 確認），
+但**不要只依賴這一層**：commit 前仍要 `git status` 與 `git ls-files` 各看一次。
+
+**`dist-all/` 不得改動。** 那裡放的是含遊戲與 ROM 的完整包，跟影片流程無關，
+不新增、不刪除、不覆蓋。
 
 ## 10. 已驗證的技術參數
 
@@ -269,18 +347,25 @@ qrencode -o qr.png -s 10 -m 2 -l M "<短網址>"
 | `freddy-capture:latest` | 有 Xvfb／xdotool／IM／ScummVM，**無 ffmpeg** | 容器內 `command -v` 逐項確認 |
 | `game-video:latest` | 有 ffmpeg（含 x11grab）與 IM，無遊戲執行環境 | 同上，並確認 `ffmpeg -devices` 列出 x11grab |
 | 兩顆 image 都沒有 | `qrencode`、`fluidsynth` | 同上；QR 要在新 image 裡補 |
-| MT-32 ROM | `/home/anr2/cht/mt32`（v1.07 control + PCM） | 檔案在位（僅供本機懷舊版，不進公開版） |
+| MT-32 ROM | 本片流程**完全不使用** | 本機懷舊版已定案不做（第 8 節），ROM 不會被讀取，也不進 git／Release |
 
 ## 11. 發布矩陣
 
-| 版本 | 尺寸／fps | 長度 | 音 | CTA | 畫面差異 | 去處 | 狀態 |
-|---|---|---|---|---|---|---|---|
-| **主片** | 1920×1080 / 30 | 62s | CC 授權配樂＋極短音效 | 完整片尾卡：QR ≥320px、短網址大字、完整網址小字，停 5s | 全部 10 鏡 | GitHub Release 資產；影音平台視第 13 節決定 | 待二審 |
-| **README GIF** | 640×400 原生 1× / 12 fps | 20s | 無聲 | 不放 QR（GitHub 上直接就在 repo 裡），末幀壓一行「完整影片見 Releases」 | 只留 #1 冷開場、#5 對照、#8 F8 三段 | README 頂部或特色段落 | 待二審 |
-| **社群短版（optional）** | 1080×1350 / 30 | 30s | 同主片 | QR＋短網址，停 4s | 重新排版為直式，遊戲畫面 640×400 ×1.5 不可用 → 需另定整數方案 | 社群平台 | **先不做**，等確定要經營社群 |
+第一階段只做兩個版本（二審定案）：**不上影音平台、不做社群直式版**。
+
+| 版本 | 尺寸／fps | 長度 | 音 | CTA | 畫面差異 | 去處 |
+|---|---|---|---|---|---|---|
+| **主片** | 1920×1080 / 30 | 62s | 只有 CC 授權配樂（無遊戲音效） | 完整片尾卡：QR ≥320px（編 repo 首頁網址）、「GitHub @wicanr2」「多情藥師酷牛仔繁中化」大字、完整網址小字，停 5s | 全部 10 鏡 | **GitHub Release 資產**（唯一發布管道） |
+| **README GIF** | 640×400 原生 1× / 12 fps | 20s | 無聲 | 不放 QR（本來就在 repo 裡），末幀壓一行「完整影片見 Releases」 | 只留 #1 冷開場、#5 對照、#8 F8 三段 | README 頂部或特色段落 |
+
+不上影音平台的連帶結果：第 8 節末段那個「平台自動版權比對」的風險在第一階段不會發生，
+但配樂授權與來源聲明照樣要做齊——哪天要上傳時才不必回頭補。
 
 GIF 用原生 1× 是刻意的：不放大就沒有插值問題，畫面銳利、檔案也小。目標 ≤5MB，
 超過就降到 10 fps 或砍成 15 秒，不要改用縮放。
+
+Release 說明欄要寫的東西：配樂曲名／作者／授權與連結、《軟體世界》廣告出處、
+遊戲版權歸屬、以及本片為非商業粉絲專案介紹的聲明。
 
 ## 12. 可觀察的成功指標
 
@@ -317,21 +402,43 @@ GIF 用原生 1× 是刻意的：不放大就沒有插值問題，畫面銳利�
 - 沒有劇透：不出現結局、死亡畫面、分數結算、幕後主使、任何謎題的解法。
 - 片中所有中文沒有錯字；片尾數字逐一對過 README。
 - 片尾與各發布管道說明欄都有來源與權利聲明。
-- 實體手機掃 QR 一次成功並開啟正確頁面。
+- 實體手機掃 QR 一次成功，開啟的是 **repo 首頁**（不是某個 tag 或 release 的網址）。
+
+**音訊（承第 8 節）**
+- 成品音軌只有一首 CC 授權配樂，不含任何原版遊戲音效、MT-32 側錄或 CD 錄音。
+- 授權證據齊全：`out/video_src/music/LICENSE/` 有來源頁快照與授權條款全文；片尾與 Release 說明都有 attribution。
 
 **工程衛生**
 - 合成全程 docker、`--cpus=2`、沒有 zoompan 幀數爆炸。
+- 錄影容器有 `trap` 收尾且外層有 `timeout`；沒有任何一支 `wait` 在等 Xvfb 或 ScummVM。
+- `freddy-video-capture:latest` 是用 `docker/Dockerfile.promo` 建的，不是 `docker commit` 來的。
 - 收工後 `docker ps -a | grep freddy-video` 為空；沒有動到任何非本專案的容器或 image；沒有執行過任何 prune／rmi。
-- `out/video/`、`out/video_src/` 未進版控，`git status` 乾淨。
 
-## 14. 待二審決定
+**安全界線（承第 9 節）**
+- `git ls-files` 沒有任何 `.mkv`／`raw_*`／`resource.*`／`.aud`／`.ROM`；`git status` 乾淨。
+- Release 資產只多出一個最終主片 mp4，沒有中間檔、沒有遊戲資料。
+- `dist-all/` 內容與時間戳與製作前一致（沒有被動過）。
 
-1. **配樂具體曲目**：確認走 CC0／CC BY 之後，還要挑一首。建議由我提三首候選（含授權連結與 30 秒試聽片段）再定，不自行拍板。
-2. **短網址**：片尾要放短網址與 QR，但目前沒有短網址。repo 全名 `wicanr2/freddy_pharkas_frontiner_pharmacist_cht` 偏長（且名稱有 `frontiner` 這個既有拼寫），需要決定是否申請短網址服務，或 QR 直接編完整網址、畫面上只放 `github.com/wicanr2` 這種可讀的縮寫。
-3. **影片要不要上影音平台**，還是只當 Release 資產。這決定第 8 節末段那個「自動版權比對」風險要不要處理。
-4. **62 秒可不可以**，或要再壓到 45–50 秒（可壓縮的是 #2 廣告脈絡與 #9 成果卡）。
-5. **第 7 鏡（配藥互動）的降級門檻**：三次嘗試拍不到可操作畫面就退回靜態方案，這個門檻可不可以接受。
-6. **要不要保留極短遊戲音效**，或全片純配樂。
-7. **本機懷舊版**（原版 MT-32 配樂、永不上傳）要不要做，還是完全不碰。
+## 14. 二審已定案的事項
 
-以上確定之前，這份提案不是最終版，也不開始拍攝或剪輯。
+| 項目 | 結論 |
+|---|---|
+| 發布範圍 | 第一階段只做 GitHub Release 主片＋README GIF；不上影音平台、不做社群直式版 |
+| 片長 | 62 秒 |
+| 配樂 | 公開主片用可驗證的 CC0（優先）或 CC BY（備選）；正式製作前先提 3 首候選給 Hermes 選 |
+| 遊戲音效 | 第一版不用，全片只有授權配樂 |
+| 本機懷舊版 | 不做 |
+| 短網址 | 不用第三方短網址；QR 編 repo 首頁完整網址，畫面文字用「GitHub @wicanr2」＋「多情藥師酷牛仔繁中化」 |
+| 配藥鏡降級 | 30 分鐘 timebox；降級後仍須是會動的畫面，不得退回純靜態 |
+| 建置環境 | 用 `docker/Dockerfile.promo`，不用 `docker commit` |
+| 擷取腳本 | ffmpeg 前景計時、PID + `trap` 收尾、外層 `timeout`；不 `wait` 長駐行程 |
+| 安全界線 | raw capture／遊戲檔／ROM／完整遊戲資料一律不進 git 與 Release；Release 只放最終主片，README 只放壓縮 GIF；不動 `dist-all/` |
+
+## 15. 待決
+
+只剩兩件：
+
+1. **三首授權配樂候選由 Hermes 選定**。候選清單（授權連結、授權版本、作者、各 30 秒試聽）
+   要等開拍授權下來後才製作——現階段不下載、不剪輯任何音樂。
+2. **正式開拍需另行授權**。這份提案通過二審不等於可以開始製作；沒有明確的開拍指令之前，
+   不擷取、不剪輯、不合成、不發布。
