@@ -1,0 +1,8 @@
+# 推廣片 live 錄影環境 = 既有擷取環境 + ffmpeg(x11grab) + qrencode。
+#
+# 為什麼不是 docker commit:那樣建出來的 image 沒有可追溯來源,換台機器就重建不出同一顆。
+# base 的 freddy-capture 由 docker/Dockerfile.capture 建(FROM freddy-build + xvfb/IM/xdotool)。
+FROM freddy-capture:latest
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ffmpeg qrencode fonts-noto-cjk \
+ && rm -rf /var/lib/apt/lists/*
