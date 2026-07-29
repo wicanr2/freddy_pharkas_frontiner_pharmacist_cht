@@ -121,7 +121,7 @@ timeout $((SECS + 180)) docker run --rm --name "freddy-video-cap-$SHOT" --cpus=2
       xdotool type --delay 60 "exit"; xdotool key Return; sleep 3
       xdotool key Escape; sleep 4
     }
-    if [ "$ROOM" != "0" ]; then jump; fi
+    if [ "$ROOM" != "0" ]; then jump; sleep 6; jump; sleep 6; fi
     import -window root "/w/out/video_src/${SHOT}_check.png" 2>/dev/null || true
 
     # 操作序列在背景送鍵,ffmpeg 在前景錄滿 SECS 秒

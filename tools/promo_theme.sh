@@ -19,4 +19,8 @@ FONT_TITLE=/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc
 FONT_BODY=/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc
 
 W=1920; H=1080; FPS=30
-GX=320; GY=100          # 遊戲畫面(2× → 1280×800)在 1920×1080 上的位置
+# [雷] 遊戲視窗實際是 **640×456** 不是 640×400。用 640×400 裁切看起來「好像完整」,
+#   其實切掉了底部 56px —— 標題選單的中文按鈕(載入/序幕/開始/說明/離開)整排就在那裡。
+#   量法:對整張擷取畫面 `convert x.png -bordercolor black -border 1 -fuzz 3% -trim info:`
+GW=640; GH=456
+GX=320; GY=20           # 2× → 1280×912,置於 (320,20);底下留 148px 給字幕條

@@ -18,8 +18,8 @@ OUT=/w/out/video; mkdir -p "$OUT"
 AD=/w/images/banner-softworld.jpg
 
 # 遊戲畫面在 1280×800 擷取畫面裡的位置(實測)
-CROP="crop=640:400:480:304"
-SCALE="scale=1280:800:flags=neighbor"
+CROP="crop=640:456:480:304"
+SCALE="scale=1280:912:flags=neighbor"
 
 # ---------- 版面元件 ----------
 bg() {  # $1 out —— 深木色徑向漸層 + 細黃銅框
@@ -30,10 +30,10 @@ bg() {  # $1 out —— 深木色徑向漸層 + 細黃銅框
 
 band() { # $1=fg.png $2=主字幕 $3=次字幕 —— 底部木牌字幕條
   convert -size ${W}x${H} xc:none \
-    -fill "#1a0c06d0" -draw "rectangle 0,$((H-190)) ${W},${H}" \
-    -fill "$ACCENT" -draw "rectangle 0,$((H-192)) ${W},$((H-188))" \
-    -font "$FONT_TITLE" -pointsize 52 -fill "$TEXT" -gravity south -annotate +0+100 "$2" \
-    -font "$FONT_BODY"  -pointsize 30 -fill "$DIM"  -gravity south -annotate +0+45  "$3" "$1"
+    -fill "#1a0c06e0" -draw "rectangle 0,$((H-148)) ${W},${H}" \
+    -fill "$ACCENT" -draw "rectangle 0,$((H-150)) ${W},$((H-146))" \
+    -font "$FONT_TITLE" -pointsize 46 -fill "$TEXT" -gravity south -annotate +0+78 "$2" \
+    -font "$FONT_BODY"  -pointsize 27 -fill "$DIM"  -gravity south -annotate +0+34  "$3" "$1"
 }
 
 # ---------- 段落產生器 ----------
@@ -65,7 +65,7 @@ echo ">> 廣告素材"
 # 廣告四格截圖在原掃描上的位置(實測):1=酒吧 2=老媽餐館 3=雜貨店 4=服飾店
 # 取與遊戲畫面同比例(640:400)的中央區域,縮放到 1280×800 後只留左半 → 做前後對照的直立分割
 adhalf() { # $1 廣告裁切區 $2 out.png
-  convert "$AD" -crop "$1" +repage -resize 1280x800! -crop 640x800+0+0 +repage "$2"
+  convert "$AD" -crop "$1" +repage -resize 1280x912! -crop 640x912+0+0 +repage "$2"
 }
 adhalf "330x206+100+582"  "$T/ad_saloon_L.png"
 adhalf "330x206+100+825"  "$T/ad_cafe_L.png"
@@ -89,15 +89,16 @@ convert "$T/seg02_base.png" \
 echo ">> 前景文字層"
 # 1. 冷開場對照(分割線 + 左右標)
 cmp_fg() { # $1 out $2 左標 $3 右標 $4 額外大字(可空)
+  # 標籤要壓深色底條:遊戲畫面與廣告掃描都偏亮,白字直接壓上去讀不到。
   convert -size ${W}x${H} xc:none \
-    -fill "$ACCENT" -draw "rectangle $((GX+638)),${GY} $((GX+642)),$((GY+800))" \
-    -font "$FONT_BODY" -pointsize 34 -fill "$TEXT" \
-    -annotate +$((GX+30))+$((GY+60)) "$2" \
-    -annotate +$((GX+700))+$((GY+60)) "$3" "$1"
+    -fill "#1a0c06cc" -draw "rectangle ${GX},${GY} $((GX+1280)),$((GY+52))" \
+    -fill "$ACCENT" -draw "rectangle $((GX+638)),${GY} $((GX+642)),$((GY+912))" \
+    -font "$FONT_BODY" -pointsize 32 -fill "$DIM"  -annotate +$((GX+28))+$((GY+36)) "$2" \
+    -font "$FONT_BODY" -pointsize 32 -fill "$TEXT" -annotate +$((GX+668))+$((GY+36)) "$3" "$1"
   if [ -n "${4:-}" ]; then
-    convert "$1" -fill "#1a0c06d8" -draw "rectangle 0,$((H-170)) ${W},${H}" \
-      -font "$FONT_TITLE" -pointsize 62 -fill "$ACCENT" -gravity south -annotate +0+70 "$4" \
-      -font "$FONT_BODY" -pointsize 28 -fill "$DIM" -gravity south -annotate +0+30 \
+    convert "$1" -fill "#1a0c06e6" -draw "rectangle 0,$((H-148)) ${W},${H}" \
+      -font "$FONT_TITLE" -pointsize 54 -fill "$ACCENT" -gravity south -annotate +0+62 "$4" \
+      -font "$FONT_BODY" -pointsize 26 -fill "$DIM" -gravity south -annotate +0+26 \
       "Freddy Pharkas: Frontier Pharmacist ・ 1993 Sierra On-Line" "$1"
   fi
 }
@@ -151,8 +152,7 @@ convert "$T/bg.png" \
 
 echo ">> 逐段算繪"
 #      段  來源                     起點  長度  前景         額外疊圖
-live "$SRC/raw_s02_saloon.mkv"  3.0  2.0 "$T/fg01a.png" "$T/p1a.mp4" "$T/ad_saloon_L.png"
-live "$SRC/raw_s02_saloon.mkv"  5.0  2.0 "$T/fg01b.png" "$T/p1b.mp4" "$T/ad_saloon_L.png"
+live "$SRC/raw_s02_saloon.mkv"  3.0  4.0 "$T/fg01b.png" "$T/p1.mp4" "$T/ad_saloon_L.png"
 still "$T/seg02.png"            5.0      "$T/p2.mp4"
 live "$SRC/raw_s03_talk.mkv"    4.0  6.0 "$T/fg03.png"  "$T/p3.mp4"
 live "$SRC/raw_s04_street.mkv"  4.0  5.0 "$T/fg04.png"  "$T/p4.mp4"
@@ -166,7 +166,7 @@ still "$T/seg11.png"            5.0      "$T/p11.mp4"
 
 echo ">> 串接"
 : > "$T/list.txt"
-for f in p1a p1b p2 p3 p4 p5 p6 p7 p8 p9 p10 p11; do echo "file '$T/$f.mp4'" >> "$T/list.txt"; done
+for f in p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11; do echo "file '$T/$f.mp4'" >> "$T/list.txt"; done
 ffmpeg -y -loglevel error -f concat -safe 0 -i "$T/list.txt" -threads 2 \
   -c:v libx264 -preset veryfast -pix_fmt yuv420p "$T/silent.mp4"
 
