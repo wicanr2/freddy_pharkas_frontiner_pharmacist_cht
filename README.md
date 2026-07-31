@@ -10,6 +10,14 @@ Sierra 的西部喜劇冒險《Freddy Pharkas: Frontier Pharmacist》，台灣�
 - **倚天中文系統 3.53 的原生點陣字**，2,889 個字，低解析 16×15 與高解析 24×24 各一套
 - **Linux／Windows／macOS 三平台**，自備遊戲的話三分鐘內可以開始玩
 
+## 宣傳影片
+
+一分鐘看完中文化實際跑起來的樣子——標題選單、配藥檯、街上的對白，全是引擎實機畫面。
+
+[![宣傳影片：多情藥師酷牛仔繁體中文化](https://img.youtube.com/vi/9oXXsmnJrFI/hqdefault.jpg)](https://youtu.be/9oXXsmnJrFI)
+
+### ▶ [youtu.be/9oXXsmnJrFI](https://youtu.be/9oXXsmnJrFI)
+
 ![當年《軟體世界》刊登的中文廣告](images/banner-softworld.jpg)
 
 <sub>《軟體世界》雜誌刊登的中文廣告，原件掃描（該頁未標示期別）。版權屬原刊與 Sierra On-Line，此處作為史料引用。</sub>
